@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>|</title>
+    <meta charset="utf-8">
+    <meta name="description"  content="This is the index">
+    <meta name="author"       content="Tundra Fizz">
+    <link rel="shortcut icon" href="/img/icon.jpg">
+    <link rel="stylesheet"    href="/css/theme.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+  </head>
+
+  <body>
+
+    <% if(admin.length){ %>
+      <div>
+        <!-- <select>
+          <option>Fizz (NA)</option>
+          <option>TPole (NA)</option>
+          <option>SHARK (EUW)</option>
+        </select> -->
+
+
+
+        <table>
+          <tr>
+            <td>Add to club</td>
+            <td><input id="add-to-club-text" type="text"></td>
+            <td><input id="add-to-club" type="button" value="Submit"></td>
+          </tr>
+            <td>Remove from club</td>
+            <td>
+              <select id="remove-from-club-text">
+                <% for(var i = 0; i < admin.length; i++){var obj=admin[i]; %>
+                  <option><%= obj["summoner_name"] %></option>
+                <% } %>
+              </select>
+            </td>
+            <td><input id="remove-from-club" type="button" value="Submit"></td>
+          <tr>
+          </tr>
+        </table>
+      </div>
+    <% } %>
+
+    <div class="content">
+      <p>Click the button</p>
+      <input id="yolo" type="button" value="Click">
+    </div>
+
+    <div class="results">
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Points</th>
+          <th>Level</th>
+          <th>Icon</th>
+          <th>Last last_played</th>
+        </tr>
+        <% for(var i = 0; i < tables.length; i++){var obj=tables[i]; %>
+          <tr>
+            <td><%= obj["summoner_name"] %></td>
+            <td><%= obj["fizz_points"]   %></td>
+            <td><%= obj["summoner_level"]%></td>
+            <td><%= obj["summoner_icon"] %></td>
+            <td><%= obj["last_played"]   %></td>
+          </tr>
+        <% } %>
+      </table>
+    </div>
+  </body>
+</html>
+
+<script>
+
+$("#yolo").click(function(){
+  $.post("testing", function(html){
+    $(".results").html(html);
+  });
+});
+
+$("#add-to-club").click(function(){
+  var obj = {
+    "name"  : $("#add-to-club-text").val(),
+    "token" : ""
+  };
+
+  $.post("add-to-club", obj, function(data){
+    // alert(data);
+  });
+});
+
+$("#remove-from-club").click(function(){
+  var obj = {
+    "name"  : $("#remove-from-club-text").val(),
+    "token" : ""
+  };
+
+  $.post("remove-from-club", obj, function(data){
+    // alert(data);
+  });
+});
+
+</script>
