@@ -1,11 +1,14 @@
 var app     = require("../server.js");
 var mysql   = require("mysql");
 var request = require("request");
+var jwt     = require("jsonwebtoken");
 var fs      = require("fs"); // File system library
 
 app.get("/", function(req, res){
-
-  var data = {
+  var cookies = req.cookies;
+  // res.clearCookie(i);
+  var token   = null;
+  var data    = {
     "tables": [],
     "admin" : []
   }
@@ -15,25 +18,61 @@ app.get("/", function(req, res){
   mySql.con.query(sql, args, function(err, result){
     data["tables"] = result;
 
-    // If logged in
-    if(true){
-      var sql  = "SELECT * FROM members WHERE club_tag=? AND summoner_region=?";
-      var args = ["Fizz", "NA"];
-      mySql.con.query(sql, args, function(err, result){
-        console.log(result);
-        data["admin"] = result;
-        res.render("index.ejs", data);
+    if(typeof cookies["token"] != "undefined"){
+      // We have a token so let's verify it. If it's a bad token, delete the cookie
+      var token = cookies["token"];
+
+      jwt.verify(token, FC.cert, function(err, decoded){
+        if(err){
+          res.render("index.ejs", data); // Invalid signature
+        }
+        else{
+          // var user    = decoded["user"];
+          var clubTag    = decoded["tag"];
+          var clubRegion = decoded["region"];
+
+          var sql  = "SELECT * FROM members WHERE club_tag=? AND summoner_region=?";
+          var args = [clubTag, clubRegion];
+          mySql.con.query(sql, args, function(err, result){
+            data["admin"] = result;
+            res.render("index.ejs", data);
+          });
+        }
       });
     }else{
+      // Not logged in
       res.render("index.ejs", data);
     }
   });
 });
 
-app.post("/testing", function(req, res){
+app.post("/testing", function(req, res, next){
+  var cookies = req.cookies;
 
-  FC.AddMember(req["body"])
-  .then(() => console.log("DONE"));
+  if(typeof cookies["token"] == "undefined"){
+    // token doesn't exist
+  }else{
+
+  }
+
+  // Set a cookie
+  // var randomNumber=Math.random().toString();
+  // randomNumber=randomNumber.substring(2,randomNumber.length);
+  // var data = "Something here"
+  // data = randomNumber;
+  // res.cookie('cookieName', data, { maxAge: 900000, httpOnly: true });
+  // res.json({"a":"b"});
+
+
+
+
+
+
+
+
+
+  // FC.AddMember(req["body"])
+  // .then(() => console.log("DONE"));
 
   // FC.GetDataFromSummonerName("Lord Dusteon").then((data) => console.log(data, "Atlantean Fizz"));
 });
@@ -86,6 +125,78 @@ app.post("/remove-from-club", function(req, res){
   res.json({});
 });
 
+app.post("/get-token-from-user", function(req, res){
+
+  // Check username and password
+  // If good, create a token and send it to the user
+
+  var obj = {
+    "user"  : "sample",
+    "region": "NA",
+    "tag"   : "Fizz"
+  };
+  var token = jwt.sign(obj, FC.cert);
+
+  res.cookie("token", token, {"maxAge": 900000, "httpOnly": true});
+  res.json({});
+
+  return;
+
+  // console.log(jwt.decode(token2));
+
+  var sql  = "SELECT * FROM users WHERE username=?";
+  var args = [req["body"]["name"]];
+  mySql.con.query(sql, args, function(err, result){
+    var token = result[0]["token"];
+    var obj = {
+      "token": token
+    }
+    res.json(obj);
+  });
+});
+
+app.post("/logout", function(req, res){
+  res.clearCookie("token");
+  res.json(null);
+});
+
+function GetTokenFromUser(){
+  var sql  = "SELECT * FROM users WHERE username=?";
+  var args = ["test"];
+
+  // mySql.con.query(sql, args, function(err, result){
+  //   var token = result[0]["token"];
+  //   var obj = {
+  //     "token": token
+  //   }
+  //   console.log(obj);
+  //   // res.json(obj);
+  // });
+
+  console.log("Generate a token");
+
+  console.log("===================================================");
+  var token = jwt.sign({ "foo": "bar" }, "shhhhh");
+  console.log(token);
+  console.log("> DECODE");
+  console.log(jwt.decode(token));
+
+  console.log("===================================================");
+  var cert = fs.readFileSync("private.key");
+  var token2 = jwt.sign({ foo: "bar" }, cert);
+  // var token = jwt.sign({ foo: "bar" }, cert, { algorithm: "ES512"});
+  console.log(token2);
+  console.log("> DECODE");
+  console.log(jwt.decode(token2));
+
+  console.log("===================================================");
+  console.log("> VERIFY");
+  var testing_1 = jwt.verify(token, "shhhhh");
+  console.log(testing_1);
+  var testing_2 = jwt.verify(token2, cert);
+  console.log(testing_2)
+}
+
 app.use(function (req, res){
   res.render("404.ejs");
 });
@@ -107,6 +218,7 @@ function MySql(){
 
 function FizzClub(){
   this.apiKey = "RGAPI-8076861f-af7d-4cc5-9850-a2e68912bfd4";
+  this.cert   = fs.readFileSync("private.key");
   this.data   = [];
   this.html   = "";
 }
@@ -197,3 +309,4 @@ FizzClub.prototype.GetDataFromSummonerName = function(name, region){return new P
 
 var mySql = new MySql();
 var FC = new FizzClub();
+// GetTokenFromUser();

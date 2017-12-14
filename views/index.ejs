@@ -12,16 +12,23 @@
 
   <body>
 
+    <% if(admin.length == 0){ %>
+    <div>
+      <div>
+        <input id="get-token-from-user-text" type="text">
+        <input id="get-token-from-user" type="button" value="Login">
+      </div>
+    </div>
+    <% } %>
+
     <% if(admin.length){ %>
       <div>
+        <input id="logout" type="button" value="Logout">
         <!-- <select>
           <option>Fizz (NA)</option>
           <option>TPole (NA)</option>
           <option>SHARK (EUW)</option>
         </select> -->
-
-
-
         <table>
           <tr>
             <td>Add to club</td>
@@ -44,8 +51,8 @@
     <% } %>
 
     <div class="content">
-      <p>Click the button</p>
-      <input id="yolo" type="button" value="Click">
+      <!-- <p>Click the button</p> -->
+      <input id="yolo" type="button" value="Press me">
     </div>
 
     <div class="results">
@@ -75,7 +82,8 @@
 
 $("#yolo").click(function(){
   $.post("testing", function(html){
-    $(".results").html(html);
+    // $(".results").html(html);
+    console.log(document.cookie);
   });
 });
 
@@ -98,6 +106,22 @@ $("#remove-from-club").click(function(){
 
   $.post("remove-from-club", obj, function(data){
     // alert(data);
+  });
+});
+
+$("#get-token-from-user").click(function(){
+  var obj = {
+    "name": $("#get-token-from-user-text").val()
+  };
+
+  $.post("get-token-from-user", obj, function(){
+    location.reload();
+  });
+});
+
+$("#logout").click(function(){
+  $.post("logout", function(){
+    location.reload();
   });
 });
 

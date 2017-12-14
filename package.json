@@ -6,11 +6,13 @@
   "author": "Tundra Fizz",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "latest",
     "ejs": "latest",
     "mysql": "latest",
-    "express": "latest",
     "request": "latest",
-    "body-parser": "latest",
+    "express": "latest",
+    "jsonwebtoken": "^8.1.0",
+    "cookie-parser": "latest",
     "node-sass-middleware": "latest"
   },
   "scripts": {
