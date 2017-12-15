@@ -12,7 +12,7 @@
 
   <body>
 
-    <% if(admin.length == 0){ %>
+    <% console.log(login);if(!login){ %>
     <div>
       <div>
         <input id="username" type="text">
@@ -22,12 +22,15 @@
     </div>
     <% } else { %>
       <div>
+        <%= login["user"] %> (<%= login["group_name"] %>)
         <input id="logout" type="button" value="Logout">
-        <!-- <select>
-          <option>Fizz (NA)</option>
-          <option>TPole (NA)</option>
-          <option>SHARK (EUW)</option>
-        </select> -->
+      </div>
+    <% } %>
+
+    <% for(){ %>
+    <% {} %>
+
+<!--     <% if(login["club_leader"]) { %>
         <table>
           <tr>
             <td>Add to club</td>
@@ -37,7 +40,8 @@
             <td>Remove from club</td>
             <td>
               <select id="remove-from-club-text">
-                <% for(var i = 0; i < admin.length; i++){var obj=admin[i]; %>
+                <% for(var i = 0; i < login["clubs"].length; i++){
+                   var obj=login["clubs"][i]; %>
                   <option><%= obj["summoner_name"] %></option>
                 <% } %>
               </select>
@@ -48,6 +52,7 @@
         </table>
       </div>
     <% } %>
+-->
 
     <div class="content">
       <!-- <p>Click the button</p> -->
@@ -114,14 +119,16 @@ $("#login").click(function(){
     "password": $("#password").val()
   };
 
-  $.post("login", obj, function(){
-    location.reload();
+  $.post("login", obj, function(data){
+    if(data["reload"] == "true")
+      location.reload();
   });
 });
 
 $("#logout").click(function(){
-  $.post("logout", function(){
-    location.reload();
+  $.post("logout", function(data){
+    if(data["reload"] == "true")
+      location.reload();
   });
 });
 

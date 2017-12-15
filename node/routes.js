@@ -1,6 +1,6 @@
 var app     = require("../server.js");
 var mysql   = require("mysql");
-var bcrypt  = require("bcrypt");
+var bcrypt  = require("bcryptjs");
 var request = require("request");
 var jwt     = require("jsonwebtoken");
 var fs      = require("fs"); // File system library
@@ -11,12 +11,36 @@ app.get("/", function(req, res){
   var token   = null;
   var data    = {
     "tables": [],
-    "admin" : []
-  }
+    "clubs" : [],
+    "login" : false
+  };
 
-  var sql  = "SELECT * FROM members;";
+  var sql  = "SELECT * FROM clubs;";
   var args = [];
   mySql.con.query(sql, args, function(err, result){
+
+    var clubs = [];
+
+    for(var i = 0; i < result.length; i++){
+      console.log(result[i]);
+      var club = {
+        "region" : result[i]["region"],
+        "tag"    : result[i]["tag"],
+        "members": []
+      }
+
+      var sql  = "SELECT * FROM members WHERE clubs_id=?";
+      var args = [result[i]["id"]];
+      mySql.con.query(sql, args, function(err, result){
+        console.log(result);
+      });
+    }
+
+    // var sql  = "SELECT * FROM members WHERE clubs_id=?";
+    // var args = [];
+    // mySql.con.query(sql, args, function(err, result){
+    // });
+
     data["tables"] = result;
 
     if(typeof cookies["token"] != "undefined"){
@@ -26,16 +50,9 @@ app.get("/", function(req, res){
       jwt.verify(token, FC.cert, function(err, decoded){
         if(err){
           res.render("index.ejs", data); // Invalid signature
-        }
-        else{
-          // var user    = decoded["user"];
-          var clubTag    = decoded["tag"];
-          var clubRegion = decoded["region"];
-
-          var sql  = "SELECT * FROM members WHERE club_tag=? AND summoner_region=?";
-          var args = [clubTag, clubRegion];
+        }else{
           mySql.con.query(sql, args, function(err, result){
-            data["admin"] = result;
+            data["login"] = decoded;
             res.render("index.ejs", data);
           });
         }
@@ -127,64 +144,74 @@ app.post("/remove-from-club", function(req, res){
 });
 
 app.post("/login", function(req, res){
-
-  // Check username and password
-  // If good, create a token and send it to the user
+  // Check username and password. If good, create a token and send it to the user
   var username = req["body"]["username"];
   var password = req["body"]["password"];
-  console.log(username);
-  console.log(password);
 
-  // Check the hashed
-  var sql  = "SELECT password_hash FROM users WHERE username=?;";
+  // Check the hashed password
+  var sql  = "SELECT * FROM users WHERE username=?;";
   var args = [username];
   mySql.con.query(sql, args, function(err, result){
     if(result.length){
-      bcrypt.compare(password, result[0]["password_hash"], function(err, res){
-        if(res){
+      var groupsId = result[0]["groups_id"];
+      var clubsIn  = result[0]["clubs_in"].split(",");
+      bcrypt.compare(password, result[0]["password_hash"], function(err, result){
+        if(result){
           // Passwords match
-          console.log("Passwords match");
+          var obj = {
+            "user": username
+          };
 
+          var sql  = "SELECT * FROM groups WHERE id=?";
+          var args = [groupsId];
+          mySql.con.query(sql, args, function(err, result){
+            for(i in result[0]){
+              if(i != "id")
+                obj[i] = result[0][i];
+            }
 
+            var sql;
+            var args;
 
+            if(obj["manage_clubs"]){
+              sql  = "SELECT * FROM clubs;";
+              args = [];
+            }else{
+              sql  = "SELECT * FROM clubs WHERE id IN (?);";
+              args = [clubsIn];
+            }
+
+            mySql.con.query(sql, args, function(err, result){
+              var clubs = [];
+              for(i in result){
+                var temp = {};
+                for(j in result[i])
+                  temp[j] = result[i][j];
+                clubs.push(temp);
+              }
+
+              obj["clubs"] = clubs;
+              console.log(obj);
+              var token = jwt.sign(obj, FC.cert);
+              res.cookie("token", token, {"maxAge": 1000000, "httpOnly": true});
+              res.json({"reload":"true"});
+            });
+          });
         }else{
-          // Passwords don't match
-          console.log("Passwords DON'T match");
+          console.log("Invalid username and/or password"); // Passwords don't match
+          res.json({"reload":"false"});
         }
       });
     }else{
-      // User doesn't exist in database
+      console.log("Invalid username and/or password"); // User doesn't exist in database
+      res.json({"reload":"false"});
     }
-  });
-
-  // var obj = {
-  //   "user"  : "sample",
-  //   "region": "NA",
-  //   "tag"   : "Fizz"
-  // };
-  // var token = jwt.sign(obj, FC.cert);
-
-  // res.cookie("token", token, {"maxAge": 900000, "httpOnly": true});
-  // res.json({});
-
-  return;
-
-  // console.log(jwt.decode(token2));
-
-  var sql  = "SELECT * FROM users WHERE username=?";
-  var args = [req["body"]["name"]];
-  mySql.con.query(sql, args, function(err, result){
-    var token = result[0]["token"];
-    var obj = {
-      "token": token
-    }
-    res.json(obj);
   });
 });
 
 app.post("/logout", function(req, res){
   res.clearCookie("token");
-  res.json(null);
+  res.json({"reload":"true"});
 });
 
 function CreateAccount(){
