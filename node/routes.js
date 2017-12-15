@@ -18,53 +18,57 @@ app.get("/", function(req, res){
   var sql  = "SELECT * FROM clubs;";
   var args = [];
   mySql.con.query(sql, args, function(err, result){
-
-    var clubs = [];
+    console.log(result);
 
     for(var i = 0; i < result.length; i++){
-      console.log(result[i]);
       var club = {
         "region" : result[i]["region"],
         "tag"    : result[i]["tag"],
         "members": []
       }
 
-      var sql  = "SELECT * FROM members WHERE clubs_id=?";
-      var args = [result[i]["id"]];
-      mySql.con.query(sql, args, function(err, result){
-        console.log(result);
-      });
+      data["clubs"].push(club);
+
+      console.log(data["clubs"]);
+
+      // var sql  = "SELECT * FROM members WHERE clubs_id=?";
+      // var args = [result[i]["id"]];
+      // mySql.con.query(sql, args, function(err, result){
+      //   res.render("index.ejs", data);
+      // });
     }
+
+    res.render("index.ejs", data);
 
     // var sql  = "SELECT * FROM members WHERE clubs_id=?";
     // var args = [];
     // mySql.con.query(sql, args, function(err, result){
     // });
 
-    data["tables"] = result;
+    // data["tables"] = result;
 
-    if(typeof cookies["token"] != "undefined"){
-      // We have a token so let's verify it. If it's a bad token, delete the cookie
-      var token = cookies["token"];
+    // if(typeof cookies["token"] != "undefined"){
+    //   // We have a token so let's verify it. If it's a bad token, delete the cookie
+    //   var token = cookies["token"];
 
-      jwt.verify(token, FC.cert, function(err, decoded){
-        if(err){
-          res.render("index.ejs", data); // Invalid signature
-        }else{
-          mySql.con.query(sql, args, function(err, result){
-            data["login"] = decoded;
-            res.render("index.ejs", data);
-          });
-        }
-      });
-    }else{
-      // Not logged in
-      res.render("index.ejs", data);
-    }
+    //   jwt.verify(token, FC.cert, function(err, decoded){
+    //     if(err){
+    //       res.render("index.ejs", data); // Invalid signature
+    //     }else{
+    //       mySql.con.query(sql, args, function(err, result){
+    //         data["login"] = decoded;
+    //         res.render("index.ejs", data);
+    //       });
+    //     }
+    //   });
+    // }else{
+    //   // Not logged in
+    //   res.render("index.ejs", data);
+    // }
   });
 });
 
-app.post("/testing", function(req, res, next){
+app.post("/testing", function(req, res){
   var cookies = req.cookies;
 
   if(typeof cookies["token"] == "undefined"){
@@ -265,6 +269,66 @@ function GetTokenFromUser(){
   var testing_2 = jwt.verify(token2, cert);
   console.log(testing_2)
 }
+
+app.post("/create-club", function(req, res){
+  var region = req["body"]["region"];
+  var tag    = req["body"]["tag"].replace(/^\s+|\s+$/g, "");
+
+  if((region != "NA" && region != "OCE" && region != "EUW" && region != "EUNE") ||
+     (tag.length < 2 || tag.length > 5)){
+    res.json({"result":"failed","reload":"false"});
+    return;
+  }
+
+  var tableName = `club_${region}_${tag}`.toLowerCase();
+  var sql = `SHOW TABLES LIKE ?`;
+  var args = [tableName];
+
+  mySql.con.query(sql, args, function(err, result){
+    if(result.length == 1){
+      res.json({"result":"failed","reload":"false"});
+    }else{
+      var vars = `(
+      id             INT(10)     NOT NULL AUTO_INCREMENT,
+      summoner_id    INT(20)     NOT NULL,
+      summoner_name  VARCHAR(20) NOT NULL,
+      summoner_level INT(10)     NOT NULL,
+      summoner_icon  INT(10)     NOT NULL,
+      fizz_points    INT(20)     NOT NULL,
+      last_played    TIMESTAMP       NULL DEFAULT NULL,
+      PRIMARY KEY (id)
+      )`;
+      var sql = `CREATE TABLE ${tableName} ${vars} ENGINE = InnoDB`;
+      mySql.con.query(sql, function(err, result){
+        if(err){
+          res.json({"result":"failed","reload":"false"});
+        }else{
+          var  sql = "INSERT INTO clubs (region, tag, club_table) VALUES (?,?,?)";
+          var args = [region, tag, tableName];
+          mySql.con.query(sql, args, function(err, result){
+            console.log("Club created!");
+            res.json({"result":"success","reload":"true"});
+          });
+        }
+      });
+    }
+  });
+});
+
+app.post("/delete-club", function(req, res){
+  var club = req["body"]["choice"];
+  var sql  = `DROP TABLE ${club}`;
+
+  mySql.con.query(sql, function(err, result){
+    var sql  = "DELETE FROM clubs WHERE club_table=?";
+    var args = [club];
+
+    mySql.con.query(sql, args, function(err, result){
+      console.log("Club deleted");
+      res.json({"reload":"true"});
+    });
+  });
+});
 
 app.use(function (req, res){
   res.render("404.ejs");

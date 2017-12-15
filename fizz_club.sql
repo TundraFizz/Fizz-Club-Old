@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 15, 2017 at 01:59 AM
+-- Generation Time: Dec 16, 2017 at 12:20 AM
 -- Server version: 10.1.29-MariaDB
 -- PHP Version: 7.1.12
 
@@ -30,17 +30,33 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `clubs` (
   `id` int(10) NOT NULL,
-  `owner` int(20) NOT NULL,
   `region` varchar(10) NOT NULL,
-  `tag` varchar(10) NOT NULL
+  `tag` varchar(10) NOT NULL,
+  `club_table` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `groups`
+--
+
+CREATE TABLE `groups` (
+  `id` int(10) NOT NULL,
+  `group_name` text NOT NULL,
+  `manage_accounts` tinyint(1) NOT NULL DEFAULT '0',
+  `manage_clubs` tinyint(1) NOT NULL DEFAULT '0',
+  `club_leader` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `clubs`
+-- Dumping data for table `groups`
 --
 
-INSERT INTO `clubs` (`id`, `owner`, `region`, `tag`) VALUES
-(1, 1, 'NA', 'Fizz');
+INSERT INTO `groups` (`id`, `group_name`, `manage_accounts`, `manage_clubs`, `club_leader`) VALUES
+(1, 'Admin', 1, 1, 1),
+(2, 'Club Leader', 0, 0, 1),
+(3, 'Club Member', 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -76,7 +92,9 @@ INSERT INTO `members` (`id`, `summoner_id`, `summoner_name`, `summoner_region`, 
 
 CREATE TABLE `users` (
   `id` int(20) NOT NULL,
+  `groups_id` int(10) NOT NULL,
   `username` varchar(20) NOT NULL,
+  `clubs_in` text NOT NULL,
   `password_hash` varchar(60) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -84,9 +102,8 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password_hash`) VALUES
-(1, 'test', ''),
-(2, 'admin', '$2a$12$8uzCQNWrLaciebRtLm5AL.yS02HPJ0TPpBNGCsVPWCbBFWhgH5a2m');
+INSERT INTO `users` (`id`, `groups_id`, `username`, `clubs_in`, `password_hash`) VALUES
+(1, 1, 'admin', '2,3', '$2a$12$8uzCQNWrLaciebRtLm5AL.yS02HPJ0TPpBNGCsVPWCbBFWhgH5a2m');
 
 --
 -- Indexes for dumped tables
@@ -96,6 +113,12 @@ INSERT INTO `users` (`id`, `username`, `password_hash`) VALUES
 -- Indexes for table `clubs`
 --
 ALTER TABLE `clubs`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `groups`
+--
+ALTER TABLE `groups`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -118,7 +141,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `clubs`
 --
 ALTER TABLE `clubs`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT for table `groups`
+--
+ALTER TABLE `groups`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `members`
@@ -130,7 +159,7 @@ ALTER TABLE `members`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

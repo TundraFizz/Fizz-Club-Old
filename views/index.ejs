@@ -12,7 +12,43 @@
 
   <body>
 
-    <% console.log(login);if(!login){ %>
+    <table>
+      <tr>
+        <th>Region</th>
+        <th>Tag</th>
+        <th></th>
+      </tr>
+      <tr>
+        <td>
+          <select id="create-club-region">
+            <option>NA</option>
+            <option>OCE</option>
+            <option>EUW</option>
+            <option>EUNE</option>
+          </select>
+        </td>
+        <td>
+          <input id="create-club-tag" type="text">
+        </td>
+        <td>
+          <input id="create-club" type="button" value="Create Club">
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <select id="delete-club-choice" style="width:100%">
+            <% for(var i = 0; i < clubs.length; i++){ var obj = clubs[i]; %>
+              <option><%= obj["tag"] %> (<%= obj["region"] %>)</option>
+            <% } %>
+          </select>
+        </td>
+        <td>
+          <input id="delete-club" type="button" value="Delete Club">
+        </td>
+      </tr>
+    </table>
+
+    <% if(!login){ %>
     <div>
       <div>
         <input id="username" type="text">
@@ -27,8 +63,8 @@
       </div>
     <% } %>
 
-    <% for(){ %>
-    <% {} %>
+    <% for(var i = 0; i < 0; i++){ %>
+    <% } %>
 
 <!--     <% if(login["club_leader"]) { %>
         <table>
@@ -129,6 +165,37 @@ $("#logout").click(function(){
   $.post("logout", function(data){
     if(data["reload"] == "true")
       location.reload();
+  });
+});
+
+$("#create-club").click(function(){
+  var obj = {
+    "region": $("#create-club-region").val(),
+    "tag"   : $("#create-club-tag").val()
+  };
+
+  $.post("create-club", obj, function(data){
+    if(data["reload"] == "true")
+      location.reload();
+    if(data["result"] == "failed")
+      alert("Invalid region/tag");
+  });
+});
+
+$("#delete-club").click(function(){
+  var temp   = $("#delete-club-choice").val().replace(/[()]/g, "").toLowerCase().split(" ");
+  var tag    = temp[0];
+  var region = temp[1];
+
+  var obj = {
+    "choice": `club_${region}_${tag}`
+  };
+
+  $.post("delete-club", obj, function(data){
+    if(data["reload"] == "true")
+      location.reload();
+    if(data["result"] == "failed")
+      alert("Invalid region/tag");
   });
 });
 
