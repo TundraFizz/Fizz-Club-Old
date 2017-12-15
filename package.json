@@ -6,14 +6,15 @@
   "author": "Tundra Fizz",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^1.0.3",
     "body-parser": "latest",
+    "cookie-parser": "latest",
     "ejs": "latest",
-    "mysql": "latest",
-    "request": "latest",
     "express": "latest",
     "jsonwebtoken": "^8.1.0",
-    "cookie-parser": "latest",
-    "node-sass-middleware": "latest"
+    "mysql": "latest",
+    "node-sass-middleware": "latest",
+    "request": "latest"
   },
   "scripts": {
     "start": "node server.js"

@@ -1,5 +1,6 @@
 var app     = require("../server.js");
 var mysql   = require("mysql");
+var bcrypt  = require("bcrypt");
 var request = require("request");
 var jwt     = require("jsonwebtoken");
 var fs      = require("fs"); // File system library
@@ -125,20 +126,46 @@ app.post("/remove-from-club", function(req, res){
   res.json({});
 });
 
-app.post("/get-token-from-user", function(req, res){
+app.post("/login", function(req, res){
 
   // Check username and password
   // If good, create a token and send it to the user
+  var username = req["body"]["username"];
+  var password = req["body"]["password"];
+  console.log(username);
+  console.log(password);
 
-  var obj = {
-    "user"  : "sample",
-    "region": "NA",
-    "tag"   : "Fizz"
-  };
-  var token = jwt.sign(obj, FC.cert);
+  // Check the hashed
+  var sql  = "SELECT password_hash FROM users WHERE username=?;";
+  var args = [username];
+  mySql.con.query(sql, args, function(err, result){
+    if(result.length){
+      bcrypt.compare(password, result[0]["password_hash"], function(err, res){
+        if(res){
+          // Passwords match
+          console.log("Passwords match");
 
-  res.cookie("token", token, {"maxAge": 900000, "httpOnly": true});
-  res.json({});
+
+
+        }else{
+          // Passwords don't match
+          console.log("Passwords DON'T match");
+        }
+      });
+    }else{
+      // User doesn't exist in database
+    }
+  });
+
+  // var obj = {
+  //   "user"  : "sample",
+  //   "region": "NA",
+  //   "tag"   : "Fizz"
+  // };
+  // var token = jwt.sign(obj, FC.cert);
+
+  // res.cookie("token", token, {"maxAge": 900000, "httpOnly": true});
+  // res.json({});
 
   return;
 
@@ -159,6 +186,21 @@ app.post("/logout", function(req, res){
   res.clearCookie("token");
   res.json(null);
 });
+
+function CreateAccount(){
+  var username = "admin";
+  var password = "admin";
+  console.log("Hashing...");
+  bcrypt.hash(password, 12, function(err, hash){
+    console.log(hash);
+  });
+
+  var sql  = "";
+  var args = [];
+  mySql.con.query(sql, args, function(err, result){
+    console.log("DONE");
+  });
+}
 
 function GetTokenFromUser(){
   var sql  = "SELECT * FROM users WHERE username=?";
@@ -310,3 +352,4 @@ FizzClub.prototype.GetDataFromSummonerName = function(name, region){return new P
 var mySql = new MySql();
 var FC = new FizzClub();
 // GetTokenFromUser();
+// CreateAccount();

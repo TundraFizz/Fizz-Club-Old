@@ -15,13 +15,12 @@
     <% if(admin.length == 0){ %>
     <div>
       <div>
-        <input id="get-token-from-user-text" type="text">
-        <input id="get-token-from-user" type="button" value="Login">
+        <input id="username" type="text">
+        <input id="password" type="password">
+        <input id="login"    type="button" value="Login">
       </div>
     </div>
-    <% } %>
-
-    <% if(admin.length){ %>
+    <% } else { %>
       <div>
         <input id="logout" type="button" value="Logout">
         <!-- <select>
@@ -109,12 +108,13 @@ $("#remove-from-club").click(function(){
   });
 });
 
-$("#get-token-from-user").click(function(){
+$("#login").click(function(){
   var obj = {
-    "name": $("#get-token-from-user-text").val()
+    "username": $("#username").val(),
+    "password": $("#password").val()
   };
 
-  $.post("get-token-from-user", obj, function(){
+  $.post("login", obj, function(){
     location.reload();
   });
 });
