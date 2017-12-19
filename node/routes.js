@@ -15,8 +15,8 @@ app.get("/", function(req, res){
     "login" : false
   };
 
-  var sql  = "SELECT * FROM clubs;";
-  var args = [];
+  var sql  = "SELECT * FROM clubs ORDER BY FIELD(region,?,?,?,?), tag";
+  var args = ["NA", "OCE", "EUW", "EUNE"];
   mySql.con.query(sql, args, function(err, result){
     console.log(result);
 
@@ -29,8 +29,6 @@ app.get("/", function(req, res){
 
       data["clubs"].push(club);
 
-      console.log(data["clubs"]);
-
       // var sql  = "SELECT * FROM members WHERE clubs_id=?";
       // var args = [result[i]["id"]];
       // mySql.con.query(sql, args, function(err, result){
@@ -38,6 +36,7 @@ app.get("/", function(req, res){
       // });
     }
 
+    console.log(data["clubs"]);
     res.render("index.ejs", data);
 
     // var sql  = "SELECT * FROM members WHERE clubs_id=?";
@@ -130,7 +129,7 @@ app.post("/add-to-club", function(req, res){
 
   // mySql.con.beginTransaction(function(err){
   //   mySql.con.query(sql, args, function(err, result){
-  //     var sql  = "SELECT * FROM members ORDER BY id DESC LIMIT 1;";
+  //     var sql  = "SELECT * FROM members ORDER BY id DESC LIMIT 1";
   //     var args = [];
   //     mySql.con.query(sql, args, function(err, result){
   //       console.log(result);
@@ -153,7 +152,7 @@ app.post("/login", function(req, res){
   var password = req["body"]["password"];
 
   // Check the hashed password
-  var sql  = "SELECT * FROM users WHERE username=?;";
+  var sql  = "SELECT * FROM users WHERE username=?";
   var args = [username];
   mySql.con.query(sql, args, function(err, result){
     if(result.length){
@@ -178,10 +177,10 @@ app.post("/login", function(req, res){
             var args;
 
             if(obj["manage_clubs"]){
-              sql  = "SELECT * FROM clubs;";
+              sql  = "SELECT * FROM clubs";
               args = [];
             }else{
-              sql  = "SELECT * FROM clubs WHERE id IN (?);";
+              sql  = "SELECT * FROM clubs WHERE id IN (?)";
               args = [clubsIn];
             }
 
@@ -350,14 +349,19 @@ function MySql(){
 }
 
 function FizzClub(){
-  this.apiKey = "RGAPI-8076861f-af7d-4cc5-9850-a2e68912bfd4";
+  this.apiKey = "RGAPI-52ed992d-12a8-4a2f-b0ee-4c8f719901bc";
   this.cert   = fs.readFileSync("private.key");
   this.data   = [];
   this.html   = "";
 }
 
 FizzClub.prototype.AddMember = function(data){return new Promise((resolve) => {
-  console.log(data)
+  var self = this;
+  console.log(data);
+
+  //
+
+  GetDataFromSummonerName
 
   resolve();
 })}
@@ -368,7 +372,22 @@ FizzClub.prototype.RemoveMember = function(){return new Promise((resolve) => {
 FizzClub.prototype.UpdateMembers = function(){return new Promise((resolve) => {
 })}
 
-FizzClub.prototype.TestingStuff = function(){return new Promise((resolve) => {
+FizzClub.prototype.GetFizzData = function(id, region){return new Promise((resolve) => {
+  var self = this;
+  var map = {
+    "NA"  : "na1",
+    "OCE" : "oc1",
+    "EUW" : "euw1",
+    "EUNE": "eun1"
+  };
+  region  = map[region];
+  var url = `https://${region}.api.riotgames.com/lol/champion-mastery/v3/champion-masteries/by-summoner/${id}/by-champion/105?api_key=${self.apiKey}`;
+  request(url, {json:true}, (err, res, body) => {
+    resolve(body);
+  });
+})}
+
+FizzClub.prototype.UpdateEverybody = function(){return new Promise((resolve) => {
   var self = this;
 
   var ids = [
@@ -444,3 +463,54 @@ var mySql = new MySql();
 var FC = new FizzClub();
 // GetTokenFromUser();
 // CreateAccount();
+Test();
+
+function AddToClub(summonerName, region, club){
+  FC.GetDataFromSummonerName(summonerName, region)
+  .then((data) => {
+    var summonerId    = data["id"];
+    var summonerName  = data["name"];
+    var summonerLevel = data["summonerLevel"];
+    var summonerIcon  = data["profileIconId"];
+
+    var sql  = `SELECT COUNT(*) as count FROM ${club} WHERE summoner_id=?;`;
+    var args = [summonerId];
+
+    mySql.con.query(sql, args, function(err, result){
+      var count = result[0]["count"];
+
+      if(count == 0){
+        FC.GetFizzData(summonerId, region)
+        .then((data) => {
+          var fizzPoints = data["championPoints"];
+          var lastPlayed = data["lastPlayTime"];
+          var  sql = `INSERT INTO ${club} (summoner_id, summoner_name, summoner_level, summoner_icon, fizz_points, last_played) VALUES (?,?,?,?,?,?)`;
+          var args = [summonerId, summonerName, summonerLevel, summonerIcon, fizzPoints, lastPlayed];
+          mySql.con.query(sql, args, function(err, result){
+
+          });
+        });
+      }else{
+        console.log("That user is already in the club");
+      }
+    });
+  });
+}
+
+function Test(){
+  AddToClub("Tundra Fizz", "NA", "club_na_fizz");
+  // AddToClub("Sohleks", "NA", "club_na_fizz");
+  // AddToClub("Abdul", "NA", "club_na_fizz");
+
+  // AddToClub("Fisherman Fizz", "NA", "club_na_yolo");
+  // AddToClub("Atlantean Fizz", "NA", "club_na_yolo");
+  // AddToClub("Void Fizz", "NA", "club_na_yolo");
+}
+
+// club_na_fizz
+// club_na_swag
+// club_oce_water
+// club_na_yolo
+// club_eune_east
+// club_euw_west
+// club_oce_fish
