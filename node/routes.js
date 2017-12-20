@@ -10,30 +10,39 @@ app.get("/", function(req, res){
   // res.clearCookie(i);
   var token   = null;
   var data    = {
-    "tables": [],
-    "clubs" : [],
+    "clubs" : {
+      "NA"  : {},
+      "OCE" : {},
+      "EUW" : {},
+      "EUNE": {}
+    },
     "login" : false
   };
 
   var sql  = "SELECT * FROM clubs ORDER BY FIELD(region,?,?,?,?), tag";
   var args = ["NA", "OCE", "EUW", "EUNE"];
   mySql.con.query(sql, args, function(err, result){
-    console.log(result);
+    var counter = result.length;
 
     for(var i = 0; i < result.length; i++){
-      var club = {
-        "region" : result[i]["region"],
-        "tag"    : result[i]["tag"],
-        "members": []
-      }
+      var region    = result[i]["region"];
+      var tag       = result[i]["tag"];
+      var clubTable = result[i]["club_table"];
 
-      data["clubs"].push(club);
+      data["clubs"][region][tag] = {};
 
-      // var sql  = "SELECT * FROM members WHERE clubs_id=?";
-      // var args = [result[i]["id"]];
-      // mySql.con.query(sql, args, function(err, result){
-      //   res.render("index.ejs", data);
-      // });
+      var sql  = `SELECT * FROM ${clubTable}`;
+      var args = [];
+      mySql.con.query(sql, args, function(err, result){
+
+        for(var i = 0; i < result.length; i++){
+
+        }
+
+        if(--counter == 0){
+          res.render("index.ejs", data);
+        }
+      });
     }
 
     console.log(data["clubs"]);
@@ -349,7 +358,7 @@ function MySql(){
 }
 
 function FizzClub(){
-  this.apiKey = "RGAPI-52ed992d-12a8-4a2f-b0ee-4c8f719901bc";
+  this.apiKey = "RGAPI-fc440194-8d53-480e-97be-ed67596b384f";
   this.cert   = fs.readFileSync("private.key");
   this.data   = [];
   this.html   = "";
@@ -459,52 +468,147 @@ FizzClub.prototype.GetDataFromSummonerName = function(name, region){return new P
   });
 })}
 
+function YoloSwag(summonerName, region, club){
+  this.summonerName = summonerName;
+  this.region       = region;
+  this.club         = club;
+  this.error        = false;
+}
+
+YoloSwag.prototype.CheckIfSummonerIsInClub = function(){return new Promise((resolve, reject) => {
+  var self = this;
+
+  var sql  = `SELECT COUNT(*) as count FROM ${self.club} WHERE summoner_name=?;`;
+  var args = [self.summonerName];
+  mySql.con.query(sql, args, function(err, result){
+    if(err){
+      reject(`${self.club} doesn't exist`);
+      return;
+    }
+
+    if(result[0]["count"] == 0){
+      resolve();
+    }else{
+      reject(`${self.summonerName} already exists in ${self.club}`);
+    }
+  });
+})}
+
+YoloSwag.prototype.GetDataFromSummonerName = function(){return new Promise((resolve, reject) => {
+  var self   = this;
+  var name   = self["summonerName"];
+  var region = self["region"];
+
+  var map = {
+    "NA"  : "na1",
+    "OCE" : "oc1",
+    "EUW" : "euw1",
+    "EUNE": "eun1"
+  };
+
+  var safe = encodeURI(name);
+  region   = map[region];
+  var url  = `https://${region}.api.riotgames.com/lol/summoner/v3/summoners/by-name/${safe}?api_key=${FC.apiKey}`;
+
+  request(url, {json:true}, (err, res, body) => {
+    if(typeof body["status"] != "undefined" && body["status"]["status_code"] == 404){
+      reject("This summoner doesn't exist");
+      return;
+    }
+
+    if(err)
+      reject(err);
+    else{
+      self["id"]            = body["id"];
+      self["profileIconId"] = body["profileIconId"];
+      self["summonerLevel"] = body["summonerLevel"];
+      resolve(body);
+    }
+  });
+})}
+
+YoloSwag.prototype.GetFizzData = function(){return new Promise((resolve, reject) => {
+  var self   = this;
+  var id     = self["id"];
+  var region = self["region"];
+
+  var map = {
+    "NA"  : "na1",
+    "OCE" : "oc1",
+    "EUW" : "euw1",
+    "EUNE": "eun1"
+  };
+
+  region  = map[region];
+  var url = `https://${region}.api.riotgames.com/lol/champion-mastery/v3/champion-masteries/by-summoner/${id}/by-champion/105?api_key=${FC.apiKey}`;
+
+  request(url, {json:true}, (err, res, body) => {
+    if(typeof body["status"] != "undefined" && body["status"]["status_code"] == 404){
+      reject("This summoner has no games with Fizz");
+      return;
+    }
+
+    if(err)
+      reject(err);
+    else{
+      self["championPoints"] = body["championPoints"];
+      self["lastPlayTime"]   = body["lastPlayTime"];
+      resolve(body);
+    }
+  });
+})}
+
+YoloSwag.prototype.AddSummonerToClub = function(){return new Promise((resolve, reject) => {
+  var self = this;
+  var club = self["club"];
+
+  var summonerId    = self["id"];
+  var summonerIcon  = self["profileIconId"];
+  var summonerName  = self["summonerName"];
+  var summonerLevel = self["summonerLevel"];
+  var fizzPoints    = self["championPoints"];
+  var lastPlayed    = self["lastPlayTime"].toString().slice(0, -3);
+
+  var  sql = `INSERT INTO ${club} (summoner_id, summoner_icon, summoner_name, summoner_level, fizz_points, last_played) VALUES (?,?,?,?,?,FROM_UNIXTIME(?))`;
+  var args = [summonerId, summonerIcon, summonerName, summonerLevel, fizzPoints, lastPlayed];
+  mySql.con.query(sql, args, function(err, result){
+    if(err)
+      reject(err);
+    else
+      resolve();
+  });
+})}
+
 var mySql = new MySql();
 var FC = new FizzClub();
 // GetTokenFromUser();
 // CreateAccount();
-Test();
+// Test();
 
 function AddToClub(summonerName, region, club){
-  FC.GetDataFromSummonerName(summonerName, region)
-  .then((data) => {
-    var summonerId    = data["id"];
-    var summonerName  = data["name"];
-    var summonerLevel = data["summonerLevel"];
-    var summonerIcon  = data["profileIconId"];
 
-    var sql  = `SELECT COUNT(*) as count FROM ${club} WHERE summoner_id=?;`;
-    var args = [summonerId];
+  var yoloSwag = new YoloSwag(summonerName, region, club);
 
-    mySql.con.query(sql, args, function(err, result){
-      var count = result[0]["count"];
-
-      if(count == 0){
-        FC.GetFizzData(summonerId, region)
-        .then((data) => {
-          var fizzPoints = data["championPoints"];
-          var lastPlayed = data["lastPlayTime"];
-          var  sql = `INSERT INTO ${club} (summoner_id, summoner_name, summoner_level, summoner_icon, fizz_points, last_played) VALUES (?,?,?,?,?,?)`;
-          var args = [summonerId, summonerName, summonerLevel, summonerIcon, fizzPoints, lastPlayed];
-          mySql.con.query(sql, args, function(err, result){
-
-          });
-        });
-      }else{
-        console.log("That user is already in the club");
-      }
-    });
-  });
+  yoloSwag.CheckIfSummonerIsInClub()
+  .then(() => yoloSwag.GetDataFromSummonerName())
+  .then(() => yoloSwag.GetFizzData())
+  .then(() => yoloSwag.AddSummonerToClub())
+  .then(() => console.log("GOOD!"))
+  .catch((err) => console.log("ERR!", err));
 }
 
 function Test(){
-  AddToClub("Tundra Fizz", "NA", "club_na_fizz");
-  // AddToClub("Sohleks", "NA", "club_na_fizz");
-  // AddToClub("Abdul", "NA", "club_na_fizz");
+  AddToClub("Tundra Fizz", "NA", "club_na_yolo");
+  AddToClub("Sohleks", "NA", "club_na_yolo");
+  AddToClub("Abdul", "NA", "club_na_yolo");
 
-  // AddToClub("Fisherman Fizz", "NA", "club_na_yolo");
-  // AddToClub("Atlantean Fizz", "NA", "club_na_yolo");
-  // AddToClub("Void Fizz", "NA", "club_na_yolo");
+  AddToClub("Fisherman Fizz", "NA", "club_na_swag");
+  AddToClub("Atlantean Fizz", "NA", "club_na_swag");
+  AddToClub("Void Fizz", "NA", "club_na_swag");
+
+  AddToClub("Super Galaxy", "OCE", "club_oce_fish");
+  AddToClub("Tsdlk sdfjfk", "OCE", "club_oce_fish");
+  AddToClub("Fish", "OCE", "club_oce_fish");
 }
 
 // club_na_fizz

@@ -49,13 +49,13 @@
     </table>
 
     <% if(!login){ %>
-    <div>
       <div>
-        <input id="username" type="text">
-        <input id="password" type="password">
-        <input id="login"    type="button" value="Login">
+        <div>
+          <input id="username" type="text">
+          <input id="password" type="password">
+          <input id="login"    type="button" value="Login">
+        </div>
       </div>
-    </div>
     <% } else { %>
       <div>
         <%= login["user"] %> (<%= login["group_name"] %>)
