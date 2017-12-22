@@ -3,77 +3,20 @@ var mysql   = require("mysql");
 var bcrypt  = require("bcryptjs");
 var request = require("request");
 var jwt     = require("jsonwebtoken");
+var moment  = require("moment");
 var fs      = require("fs"); // File system library
 
+var globalApiKey = "RGAPI-09a628be-61b4-4550-a6e9-44314d6b358a"; // DELETE THIS LATER
+
 app.get("/", function(req, res){
-  var cookies = req.cookies;
-  // res.clearCookie(i);
-  var token   = null;
-  var data    = {
-    "clubs" : {
-      "NA"  : {},
-      "OCE" : {},
-      "EUW" : {},
-      "EUNE": {}
-    },
-    "login" : false
-  };
+  var FC = new FizzClub(req.cookies);
 
-  var sql  = "SELECT * FROM clubs ORDER BY FIELD(region,?,?,?,?), tag";
-  var args = ["NA", "OCE", "EUW", "EUNE"];
-  mySql.con.query(sql, args, function(err, result){
-    var counter = result.length;
-
-    for(var i = 0; i < result.length; i++){
-      var region    = result[i]["region"];
-      var tag       = result[i]["tag"];
-      var clubTable = result[i]["club_table"];
-
-      data["clubs"][region][tag] = {};
-
-      var sql  = `SELECT * FROM ${clubTable}`;
-      var args = [];
-      mySql.con.query(sql, args, function(err, result){
-
-        for(var i = 0; i < result.length; i++){
-
-        }
-
-        if(--counter == 0){
-          res.render("index.ejs", data);
-        }
-      });
-    }
-
-    console.log(data["clubs"]);
-    res.render("index.ejs", data);
-
-    // var sql  = "SELECT * FROM members WHERE clubs_id=?";
-    // var args = [];
-    // mySql.con.query(sql, args, function(err, result){
-    // });
-
-    // data["tables"] = result;
-
-    // if(typeof cookies["token"] != "undefined"){
-    //   // We have a token so let's verify it. If it's a bad token, delete the cookie
-    //   var token = cookies["token"];
-
-    //   jwt.verify(token, FC.cert, function(err, decoded){
-    //     if(err){
-    //       res.render("index.ejs", data); // Invalid signature
-    //     }else{
-    //       mySql.con.query(sql, args, function(err, result){
-    //         data["login"] = decoded;
-    //         res.render("index.ejs", data);
-    //       });
-    //     }
-    //   });
-    // }else{
-    //   // Not logged in
-    //   res.render("index.ejs", data);
-    // }
-  });
+  FC.GetApiVersion()
+  .then(() => FC.CheckLogin(res))
+  .then(() => FC.GetMainPage1())
+  // .then(() => res.render("index.ejs", FC.data))
+  .then(() => {console.log(FC.data);res.render("index.ejs", FC.data);})
+  .catch((err) => console.log("ERR!", err));
 });
 
 app.post("/testing", function(req, res){
@@ -155,7 +98,28 @@ app.post("/remove-from-club", function(req, res){
   res.json({});
 });
 
+app.post("/create-account", function(req, res){
+  var username = req["body"]["username"];
+  var password = req["body"]["password"];
+  var groupsId = 3;  // Lowest rank: Club Member
+  var clubsIn  = ""; // No clubs
+
+  bcrypt.hash(password, 12, function(err, hash){
+    var sql  = "INSERT INTO users (groups_id, username, clubs_in, password_hash) VALUES (?,?,?,?)";
+    var args = [groupsId, username, clubsIn, hash];
+
+    mySql.con.query(sql, args, function(err, result){
+      if(err)
+        res.json({"r": 0, "msg": `That account name has already been taken, please choose a different one`});
+      else
+        res.json({"r": 1, "msg": `The account ${username} has been created`});
+    });
+  });
+});
+
 app.post("/login", function(req, res){
+  var FC = new FizzClub(req.cookies);
+
   // Check username and password. If good, create a token and send it to the user
   var username = req["body"]["username"];
   var password = req["body"]["password"];
@@ -165,58 +129,21 @@ app.post("/login", function(req, res){
   var args = [username];
   mySql.con.query(sql, args, function(err, result){
     if(result.length){
-      var groupsId = result[0]["groups_id"];
-      var clubsIn  = result[0]["clubs_in"].split(",");
+      var id = result[0]["id"];
       bcrypt.compare(password, result[0]["password_hash"], function(err, result){
         if(result){
           // Passwords match
-          var obj = {
-            "user": username
-          };
-
-          var sql  = "SELECT * FROM groups WHERE id=?";
-          var args = [groupsId];
-          mySql.con.query(sql, args, function(err, result){
-            for(i in result[0]){
-              if(i != "id")
-                obj[i] = result[0][i];
-            }
-
-            var sql;
-            var args;
-
-            if(obj["manage_clubs"]){
-              sql  = "SELECT * FROM clubs";
-              args = [];
-            }else{
-              sql  = "SELECT * FROM clubs WHERE id IN (?)";
-              args = [clubsIn];
-            }
-
-            mySql.con.query(sql, args, function(err, result){
-              var clubs = [];
-              for(i in result){
-                var temp = {};
-                for(j in result[i])
-                  temp[j] = result[i][j];
-                clubs.push(temp);
-              }
-
-              obj["clubs"] = clubs;
-              console.log(obj);
-              var token = jwt.sign(obj, FC.cert);
-              res.cookie("token", token, {"maxAge": 1000000, "httpOnly": true});
-              res.json({"reload":"true"});
-            });
-          });
+          var token = jwt.sign({"id":id}, FC.cert);
+          res.cookie("token", token, {"maxAge": 1000000, "httpOnly": true});
+          res.json({"reload":"true"});
         }else{
-          console.log("Invalid username and/or password"); // Passwords don't match
-          res.json({"reload":"false"});
+          // Passwords don't match
+          res.json({"reload":"false","err":"Invalid username and/or password"});
         }
       });
     }else{
-      console.log("Invalid username and/or password"); // User doesn't exist in database
-      res.json({"reload":"false"});
+      // User doesn't exist in database
+      res.json({"reload":"false","err":"Invalid username and/or password"});
     }
   });
 });
@@ -225,58 +152,6 @@ app.post("/logout", function(req, res){
   res.clearCookie("token");
   res.json({"reload":"true"});
 });
-
-function CreateAccount(){
-  var username = "admin";
-  var password = "admin";
-  console.log("Hashing...");
-  bcrypt.hash(password, 12, function(err, hash){
-    console.log(hash);
-  });
-
-  var sql  = "";
-  var args = [];
-  mySql.con.query(sql, args, function(err, result){
-    console.log("DONE");
-  });
-}
-
-function GetTokenFromUser(){
-  var sql  = "SELECT * FROM users WHERE username=?";
-  var args = ["test"];
-
-  // mySql.con.query(sql, args, function(err, result){
-  //   var token = result[0]["token"];
-  //   var obj = {
-  //     "token": token
-  //   }
-  //   console.log(obj);
-  //   // res.json(obj);
-  // });
-
-  console.log("Generate a token");
-
-  console.log("===================================================");
-  var token = jwt.sign({ "foo": "bar" }, "shhhhh");
-  console.log(token);
-  console.log("> DECODE");
-  console.log(jwt.decode(token));
-
-  console.log("===================================================");
-  var cert = fs.readFileSync("private.key");
-  var token2 = jwt.sign({ foo: "bar" }, cert);
-  // var token = jwt.sign({ foo: "bar" }, cert, { algorithm: "ES512"});
-  console.log(token2);
-  console.log("> DECODE");
-  console.log(jwt.decode(token2));
-
-  console.log("===================================================");
-  console.log("> VERIFY");
-  var testing_1 = jwt.verify(token, "shhhhh");
-  console.log(testing_1);
-  var testing_2 = jwt.verify(token2, cert);
-  console.log(testing_2)
-}
 
 app.post("/create-club", function(req, res){
   var region = req["body"]["region"];
@@ -357,12 +232,26 @@ function MySql(){
   });
 }
 
-function FizzClub(){
-  this.apiKey = "RGAPI-fc440194-8d53-480e-97be-ed67596b384f";
+function FizzClub(cookies){
+  this.cookies = cookies;
+  this.apiKey = "RGAPI-09a628be-61b4-4550-a6e9-44314d6b358a";
   this.cert   = fs.readFileSync("private.key");
-  this.data   = [];
-  this.html   = "";
+  this.apiVersion = null;
+  this.data   = {
+    "clubs"     : [],
+    "login"     : null,
+    "apiVersion": null
+  };
 }
+
+FizzClub.prototype.GetApiVersion = function(){return new Promise((resolve) => {
+  var self = this;
+  request("https://ddragon.leagueoflegends.com/api/versions.json", {json:true}, (err, res, body) => {
+    self["apiVersion"]         = body[0];
+    self["data"]["apiVersion"] = body[0];
+    resolve();
+  });
+})}
 
 FizzClub.prototype.AddMember = function(data){return new Promise((resolve) => {
   var self = this;
@@ -468,6 +357,102 @@ FizzClub.prototype.GetDataFromSummonerName = function(name, region){return new P
   });
 })}
 
+FizzClub.prototype.GetMainPage1 = function(){return new Promise((resolve) => {
+  var self = this;
+  var sql  = "SELECT * FROM clubs ORDER BY FIELD(region,?,?,?,?), tag";
+  var args = ["NA", "OCE", "EUW", "EUNE"];
+  mySql.con.query(sql, args, function(err, result){
+    self.counter = result.length;
+
+    if(self.counter == 0)
+      resolve();
+
+    for(var i = 0; i < result.length; i++){
+      var obj = {
+        "region"   : result[i]["region"],
+        "tag"      : result[i]["tag"],
+        "clubTable": result[i]["club_table"],
+        "members"  : []
+      };
+
+      self["data"]["clubs"].push(obj);
+
+      self.GetMainPage2(self["data"]["clubs"][i])
+      .then(() => {
+        if(--self.counter == 0){
+          resolve();
+        }
+      });
+    }
+  });
+})}
+
+FizzClub.prototype.GetMainPage2 = function(club){return new Promise((resolve) => {
+  var self = this;
+  var sql  = `SELECT * FROM ${club["clubTable"]} ORDER BY summoner_name`;
+  var args = [];
+  mySql.con.query(sql, args, function(err, result){
+    for(var i = 0; i < result.length; i++){
+      var lastPlayed = moment().diff(result[i]["last_played"], "days");
+      if(lastPlayed == 0)
+        lastPlayed = "Today";
+      else if(lastPlayed == 1)
+        lastPlayed += " day ago";
+      else
+        lastPlayed += " days ago";
+
+      var obj = {
+        "summonerId"   : result[i]["summoner_id"],
+        "summonerName" : result[i]["summoner_name"],
+        "summonerLevel": result[i]["summoner_level"],
+        "summonerIcon" : result[i]["summoner_icon"],
+        "fizzPoints"   : result[i]["fizz_points"],
+        "lastPlayed"   : lastPlayed
+      };
+      club["members"].push(obj);
+    }
+    resolve();
+  });
+})}
+
+FizzClub.prototype.CheckLogin = function(res){return new Promise((resolve) => {
+  var self = this;
+  var loginInfo = {};
+
+  if(typeof self.cookies["token"] != "undefined"){
+    // We have a token so let's verify it. If it's a bad token, delete the cookie
+    var token = self.cookies["token"];
+
+    jwt.verify(token, self.cert, function(err, decoded){
+      if(err){
+        res.clearCookie("token");
+        resolve();
+      }else{
+        var sql  = "SELECT * FROM users WHERE id=?";
+        var args = [decoded["id"]];
+        mySql.con.query(sql, args, function(err, result){
+          var groupsId          = result[0]["groups_id"];
+          loginInfo["username"] = result[0]["username"]
+          loginInfo["clubsIn"]  = result[0]["clubs_in"].split(",");
+
+          var sql  = "SELECT * FROM groups WHERE id=?";
+          var args = [groupsId];
+          mySql.con.query(sql, args, function(err, result){
+            for(i in result[0]){
+              if(i != "id")
+                loginInfo[i] = result[0][i];
+            }
+            self["data"]["login"] = loginInfo;
+            resolve();
+          });
+        });
+      }
+    });
+  }else{
+    resolve(); // Not logged in
+  }
+})}
+
 function YoloSwag(summonerName, region, club){
   this.summonerName = summonerName;
   this.region       = region;
@@ -508,7 +493,7 @@ YoloSwag.prototype.GetDataFromSummonerName = function(){return new Promise((reso
 
   var safe = encodeURI(name);
   region   = map[region];
-  var url  = `https://${region}.api.riotgames.com/lol/summoner/v3/summoners/by-name/${safe}?api_key=${FC.apiKey}`;
+  var url  = `https://${region}.api.riotgames.com/lol/summoner/v3/summoners/by-name/${safe}?api_key=${globalApiKey}`;
 
   request(url, {json:true}, (err, res, body) => {
     if(typeof body["status"] != "undefined" && body["status"]["status_code"] == 404){
@@ -540,7 +525,7 @@ YoloSwag.prototype.GetFizzData = function(){return new Promise((resolve, reject)
   };
 
   region  = map[region];
-  var url = `https://${region}.api.riotgames.com/lol/champion-mastery/v3/champion-masteries/by-summoner/${id}/by-champion/105?api_key=${FC.apiKey}`;
+  var url = `https://${region}.api.riotgames.com/lol/champion-mastery/v3/champion-masteries/by-summoner/${id}/by-champion/105?api_key=${globalApiKey}`;
 
   request(url, {json:true}, (err, res, body) => {
     if(typeof body["status"] != "undefined" && body["status"]["status_code"] == 404){
@@ -580,10 +565,29 @@ YoloSwag.prototype.AddSummonerToClub = function(){return new Promise((resolve, r
 })}
 
 var mySql = new MySql();
-var FC = new FizzClub();
-// GetTokenFromUser();
-// CreateAccount();
+
 // Test();
+
+function Test(){
+  AddToClub("Tundra Fizz", "NA", "club_na_fizz");
+  AddToClub("Sohleks", "NA", "club_na_fizz");
+  AddToClub("Abdul", "NA", "club_na_fizz");
+  AddToClub("GnarsBadFurDay", "NA", "club_na_fizz");
+  AddToClub("Zakkery", "NA", "club_na_fizz");
+
+  AddToClub("Fisherman Fizz", "NA", "club_na_swag");
+  AddToClub("Atlantean Fizz", "NA", "club_na_swag");
+  AddToClub("Void Fizz", "NA", "club_na_swag");
+  AddToClub("PG 0ne Magneto", "NA", "club_na_swag");
+  AddToClub("kimalsgud", "NA", "club_na_swag");
+  AddToClub("GeGe InInDerr", "NA", "club_na_swag");
+  AddToClub("LegacyOfDanny", "NA", "club_na_swag");
+  AddToClub("LittleBro123", "NA", "club_na_swag");
+
+  AddToClub("Super Galaxy", "OCE", "club_oce_fish");
+  AddToClub("Tsdlk sdfjfk", "OCE", "club_oce_fish");
+  AddToClub("Fish", "OCE", "club_oce_fish");
+}
 
 function AddToClub(summonerName, region, club){
 
@@ -594,27 +598,6 @@ function AddToClub(summonerName, region, club){
   .then(() => yoloSwag.GetFizzData())
   .then(() => yoloSwag.AddSummonerToClub())
   .then(() => console.log("GOOD!"))
+  // .catch((err) => console.log("ERR!"));
   .catch((err) => console.log("ERR!", err));
 }
-
-function Test(){
-  AddToClub("Tundra Fizz", "NA", "club_na_yolo");
-  AddToClub("Sohleks", "NA", "club_na_yolo");
-  AddToClub("Abdul", "NA", "club_na_yolo");
-
-  AddToClub("Fisherman Fizz", "NA", "club_na_swag");
-  AddToClub("Atlantean Fizz", "NA", "club_na_swag");
-  AddToClub("Void Fizz", "NA", "club_na_swag");
-
-  AddToClub("Super Galaxy", "OCE", "club_oce_fish");
-  AddToClub("Tsdlk sdfjfk", "OCE", "club_oce_fish");
-  AddToClub("Fish", "OCE", "club_oce_fish");
-}
-
-// club_na_fizz
-// club_na_swag
-// club_oce_water
-// club_na_yolo
-// club_eune_east
-// club_euw_west
-// club_oce_fish

@@ -1,3 +1,220 @@
+<style>
+html {
+  font-family: arial;
+}
+
+body {
+  background-image:    url(img/bg.jpg);
+  background-position: center;
+  background-size:     cover;
+}
+
+.ns {
+  /* No select */
+  -webkit-touch-callout: none; /* iOS Safari    */
+  -webkit-user-select:   none; /* Safari        */
+  -khtml-user-select:    none; /* Konqueror     */
+  -moz-user-select:      none; /* Firefox       */
+  -ms-user-select:       none; /* IE, Edge      */
+  user-select:           none; /* Chrome, Opera */
+}
+
+.nav-bar {
+  min-width: 500px;
+}
+
+.nav-bar p {
+  display: inline-block;
+  margin: 0;
+}
+
+.nav-bar > .left {
+  display: inline-block;
+  border: 1px solid black;
+  border-top: 0px;
+  border-left: 0px;
+  padding: 4px 4px 4px 0px;
+  border-radius: 15px 0px;
+}
+
+.nav-bar > .right {
+  display: inline-block;
+  float:   right;
+  border: 1px solid black;
+  border-top: 0px;
+  border-right: 0px;
+  padding: 4px 0px 4px 4px;
+  border-radius: 0px 15px;
+}
+
+.nav-bar > .left  > div,
+.nav-bar > .right > div {
+  display: inline-block;
+  cursor: pointer;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 0px 5px;
+  background: linear-gradient(to bottom right, #52b0f7, #2a6491);
+}
+
+
+.nav-bar > .left  > div {margin-left:  10px;}
+.nav-bar > .right > div {margin-right: 10px;}
+
+.nav-bar > .left  > div:hover,
+.nav-bar > .right > div:hover {
+  background: linear-gradient(to bottom right, #6dbcf8, #2f658e);
+}
+
+.nav-bar > .left  > div:active,
+.nav-bar > .right > div:active {
+  background: linear-gradient(to bottom right, #3ca5f6, #1e537b);
+}
+
+.icon-cell {
+  width:            32px;
+  height:           32px;
+  background-size:  cover;
+  padding:          0;
+}
+
+#results {
+  margin:  0 auto;
+  display: table;
+}
+
+#results > table {
+  display:         table;
+  border-collapse: collapse;
+  width:           400px;
+}
+
+#results > table > tbody > tr {
+  height: 1px;
+}
+
+#results > table > tbody > tr:nth-child(1) {
+  background-color: #c3f9ff;
+}
+
+#results > table > tbody > tr:nth-child(2) {
+  background-color: #52b0f7;
+}
+
+#results > table > tbody > tr:nth-child(2n+3) {
+  background-color: #2a6491;
+  color:            white;
+}
+
+#results > table > tbody > tr:nth-child(2n+4) {
+  background-color: #1e497b;
+  color:            white;
+}
+
+#results > table, table > tbody > tr > th {
+  border: 1px solid black;
+}
+
+.center-container {
+  position: fixed;
+  width:    100%;
+  top:      15%;
+}
+
+/* cal = Create Account & Login */
+#cal {
+  display: none;
+  width: 200px;
+  height: 128px;
+  border-radius: 30px 30px 0px 0px;
+  margin: 0 auto;
+  border: 1px solid black;
+  background: linear-gradient(to bottom right, #6bafe3, #0b407d);
+}
+
+#cal-head {
+  border-bottom: 1px solid black;
+  cursor:        default;
+}
+
+#create-account-title,
+#login-title {
+  display: none;
+  width:        170px;
+  text-align:   center;
+  border-right: 2px solid black;
+}
+
+#create-account-extra {display: none;}
+#login-extra          {display: none; height: 22.67px;}
+
+#cal[status="create-account"] #create-account-extra {display: table-row;}
+#cal[status="login"]          #login-extra          {display: table-row;}
+
+#cal[status="create-account"] #create-account-title {
+  display: block;
+}
+
+#cal[status="login"] #login-title {
+  display: block;
+}
+
+#cal-head > table {
+  margin:          0;
+  border-collapse: collapse;
+}
+
+#cal-close {
+  position: relative;
+  left:     1px;
+  top:      1px;
+  cursor:   pointer;
+}
+
+#cal-body td:first-child {
+  padding-right: 10px;
+  cursor:        default;
+}
+
+#cal-body table {
+  border-collapse: collapse;
+  margin:          0 auto;
+  margin-top:      4px;
+}
+
+#cal input {
+  width:  100px;
+}
+
+#cal-submit {
+  width: 100px;
+  height: 20px;
+  border: 1px solid black;
+  cursor: pointer;
+  margin: 6px auto;
+  text-align: center;
+  background: linear-gradient(to bottom right, #52b0f7, #2a6491);
+}
+
+#cal-submit:hover {
+  background: linear-gradient(to bottom right, #6dbcf8, #2f658e);
+}
+
+#cal-submit:active {
+  background: linear-gradient(to bottom right, #3ca5f6, #1e537b);
+}
+
+/*#login {
+  background-color: cyan;
+  height: 300px;
+  width: 200px;
+  border-radius: 30px 30px 0px 0px;
+  margin: 0 auto;
+  border: 1px solid black;
+}*/
+
+</style>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -11,6 +228,24 @@
   </head>
 
   <body>
+    <div class="nav-bar ns">
+      <div class="left">
+        <div class="filter" region="ALL">ALL</div>
+        <div class="filter" region="NA">NA</div>
+        <div class="filter" region="OCE">OCE</div>
+        <div class="filter" region="EUW">EUW</div>
+        <div class="filter" region="EUNE">EUNE</div>
+      </div>
+      <div class="right">
+        <% if(!login){ %>
+          <div id="nav-login">Login</div>
+          <div id="nav-register">Register</div>
+        <% } else { %>
+          <p><%= login["username"] %> (<%= login["group_name"] %>)</p>
+          <div id="nav-logout">Logout</div>
+        <% } %>
+      </div>
+    </div>
 
     <table>
       <tr>
@@ -47,26 +282,10 @@
         </td>
       </tr>
     </table>
-
-    <% if(!login){ %>
-      <div>
-        <div>
-          <input id="username" type="text">
-          <input id="password" type="password">
-          <input id="login"    type="button" value="Login">
-        </div>
-      </div>
-    <% } else { %>
-      <div>
-        <%= login["user"] %> (<%= login["group_name"] %>)
-        <input id="logout" type="button" value="Logout">
-      </div>
-    <% } %>
-
     <% for(var i = 0; i < 0; i++){ %>
     <% } %>
 
-<!--     <% if(login["club_leader"]) { %>
+     <% if(login != null){ %>
         <table>
           <tr>
             <td>Add to club</td>
@@ -76,8 +295,8 @@
             <td>Remove from club</td>
             <td>
               <select id="remove-from-club-text">
-                <% for(var i = 0; i < login["clubs"].length; i++){
-                   var obj=login["clubs"][i]; %>
+                <% for(var i = 0; i < clubs.length; i++){
+                   var obj=clubs[i]; %>
                   <option><%= obj["summoner_name"] %></option>
                 <% } %>
               </select>
@@ -86,46 +305,72 @@
           <tr>
           </tr>
         </table>
-      </div>
     <% } %>
--->
 
-    <div class="content">
-      <!-- <p>Click the button</p> -->
-      <input id="yolo" type="button" value="Press me">
-    </div>
-
-    <div class="results">
-      <table>
-        <tr>
-          <th>Name</th>
-          <th>Points</th>
-          <th>Level</th>
-          <th>Icon</th>
-          <th>Last last_played</th>
-        </tr>
-        <% for(var i = 0; i < tables.length; i++){var obj=tables[i]; %>
+    <div id="results" filter="ALL">
+      <% for(var i = 0; i < clubs.length; i++){var obj=clubs[i]; %>
+        <table tag=<%= obj["tag"] %> region=<%= obj["region"] %>>
           <tr>
-            <td><%= obj["summoner_name"] %></td>
-            <td><%= obj["fizz_points"]   %></td>
-            <td><%= obj["summoner_level"]%></td>
-            <td><%= obj["summoner_icon"] %></td>
-            <td><%= obj["last_played"]   %></td>
+            <th colspan="5"><%= obj["tag"] %> (<%= obj["region"] %>)</th>
           </tr>
-        <% } %>
-      </table>
+          <tr>
+            <th colspan="2">Name</th>
+            <th>Points</th>
+            <th>Level</th>
+            <th>Last Played</th>
+          </tr>
+          <% for(var j = 0; j < obj["members"].length; j++){var mem=obj["members"][j]; %>
+            <tr>
+              <td class="icon-cell" style="background-image: url(http://ddragon.leagueoflegends.com/cdn/<%= apiVersion %>/img/profileicon/<%= mem['summonerIcon'] %>.png);" %></td>
+              <td><%= mem["summonerName"]  %></td>
+              <td><%= mem["fizzPoints"]    %></td>
+              <td><%= mem["summonerLevel"] %></td>
+              <td><%= mem["lastPlayed"]    %></td>
+            </tr>
+          <% } %>
+        </table>
+      <% } %>
     </div>
   </body>
+
+  <div class="center-container ns">
+    <div id="cal" active="0" status="null">
+      <div id="cal-head">
+        <table>
+          <tr>
+            <td id="create-account-title">Register</td>
+            <td id="login-title">Login</td>
+            <td id="cal-close">X</td>
+          </tr>
+        </table>
+      </div>
+      <div id="cal-body">
+        <table>
+          <tr>
+            <td>Username</td>
+            <td><input id="cal-username" type="text"></td>
+          </tr>
+          <tr>
+            <td>Password</td>
+            <td><input id="cal-password" type="password"></td>
+          </tr>
+          <tr id="create-account-extra">
+            <td><abbr title="Type your password again">Confirm</abbr></td>
+            <td><input id="cal-password-2" type="password"></td>
+          </tr>
+          <tr id="login-extra"></tr>
+          <tr>
+            <td colspan="2">
+              <div id="cal-submit">Submit</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
 </html>
 
 <script>
-
-$("#yolo").click(function(){
-  $.post("testing", function(html){
-    // $(".results").html(html);
-    console.log(document.cookie);
-  });
-});
 
 $("#add-to-club").click(function(){
   var obj = {
@@ -146,25 +391,6 @@ $("#remove-from-club").click(function(){
 
   $.post("remove-from-club", obj, function(data){
     // alert(data);
-  });
-});
-
-$("#login").click(function(){
-  var obj = {
-    "username": $("#username").val(),
-    "password": $("#password").val()
-  };
-
-  $.post("login", obj, function(data){
-    if(data["reload"] == "true")
-      location.reload();
-  });
-});
-
-$("#logout").click(function(){
-  $.post("logout", function(data){
-    if(data["reload"] == "true")
-      location.reload();
   });
 });
 
@@ -197,6 +423,127 @@ $("#delete-club").click(function(){
     if(data["result"] == "failed")
       alert("Invalid region/tag");
   });
+});
+
+$("#nav-register").click(function(){
+  var active = $("#cal").attr("active");
+  var status = $("#cal").attr("status");
+
+  if(status == "null"){
+    $("#cal").attr("active", "1");
+    $("#cal").attr("status", "create-account");
+    $("#cal").fadeIn(500, function(){
+      $("#cal").attr("active", "2");
+      $("#cal").attr("status", "create-account");
+    });
+  }
+
+  else if(status == "create-account" && active == "2"){
+    $("#cal").attr("active", "1");
+    $("#cal").attr("status", "create-account");
+    $("#cal").fadeOut(500, function(){
+      $("#cal").attr("active", "0");
+      $("#cal").attr("status", "null");
+    });
+  }
+
+  else if(status == "login" && active == "2"){
+    $("#cal").attr("active", "2");
+    $("#cal").attr("status", "create-account");
+  }
+});
+
+$("#nav-login").click(function(){
+  var active = $("#cal").attr("active");
+  var status = $("#cal").attr("status");
+
+  if(status == "null"){
+    $("#cal").attr("active", "1");
+    $("#cal").attr("status", "login");
+    $("#cal").fadeIn(500, function(){
+      $("#cal").attr("active", "2");
+      $("#cal").attr("status", "login");
+    });
+  }
+
+  else if(status == "login" && active == "2"){
+    $("#cal").attr("active", "1");
+    $("#cal").attr("status", "login");
+    $("#cal").fadeOut(500, function(){
+      $("#cal").attr("active", "0");
+      $("#cal").attr("status", "null");
+    });
+  }
+
+  else if(status == "create-account" && active == "2"){
+    $("#cal").attr("active", "2");
+    $("#cal").attr("status", "login");
+  }
+});
+
+$("#nav-logout").click(function(){
+  $.post("logout", function(data){
+    if(data["reload"] == "true")
+      location.reload();
+  });
+});
+
+$("#cal-close").click(function(){
+  var active = $("#cal").attr("active");
+  if(active == "2"){
+    $("#cal").attr("active", "1");
+    $("#cal").fadeOut(500, function(){
+      $("#cal").attr("active", "0");
+      $("#cal").attr("status", "null");
+    });
+  }
+});
+
+$("#cal-submit").click(function(){
+  var status = $("#cal").attr("status");
+  var obj = {
+    "username": $("#cal-username").val(),
+    "password": $("#cal-password").val()
+  };
+
+  if(status == "create-account"){
+    if($("#cal-password").val() != $("#cal-password-2").val()){
+      alert("passwords don't match");
+      return;
+    }else{
+      $.post("create-account", obj, function(data){
+        alert(data["msg"]);
+        if(data["r"])
+          $("#nav-login").trigger("click");
+      });
+    }
+  }else if(status == "login"){
+    $.post("login", obj, function(data){
+      if(data["reload"] == "true")
+        location.reload();
+      if(data["err"])
+        alert(data["err"]);
+    });
+  }
+});
+
+$("#cal input").keypress(function(e){
+  if(e.which == 13){
+    $("#cal-submit").trigger("click");
+  }
+});
+
+$(".filter").click(function(){
+  var region = $(this).attr("region");
+
+  if(region == "ALL"){
+    $("#results > table").css("display", "table");
+  }else{
+    $("#results > table").css("display", "none");
+    $(`#results > table[region="${region}"]`).each(function(){
+      $(this).css("display", "table");
+    });
+  }
 });
 
 </script>

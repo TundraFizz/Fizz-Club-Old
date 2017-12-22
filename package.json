@@ -12,6 +12,7 @@
     "ejs": "latest",
     "express": "latest",
     "jsonwebtoken": "latest",
+    "moment": "^2.20.1",
     "mysql": "latest",
     "node-sass-middleware": "latest",
     "request": "latest"
