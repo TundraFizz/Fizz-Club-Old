@@ -1,12 +1,24 @@
 <style>
+
 html {
-  font-family: arial;
+  font-family: "Roboto", sans-serif;
+}
+
+#background {
+  filter: blur(4px);
+  background-image: url(img/bg.jpg);
+  background-position: center;
+  background-size: cover;
+  width: 103%;
+  height: 103%;
+  position: fixed;
+  z-index: -1;
+  top: -2%;
+  left: -2%;
 }
 
 body {
-  background-image:    url(img/bg.jpg);
-  background-position: center;
-  background-size:     cover;
+  margin: 0;
 }
 
 .ns {
@@ -20,7 +32,14 @@ body {
 }
 
 .nav-bar {
-  min-width: 500px;
+  min-width:        500px;
+  background-color: #0f283e;
+  border:           1px solid black;
+  border-top:       0px;
+  border-left:      0px;
+  border-right:     0px;
+  padding:          4px;
+  z-index:          2;
 }
 
 .nav-bar p {
@@ -30,31 +49,24 @@ body {
 
 .nav-bar > .left {
   display: inline-block;
-  border: 1px solid black;
-  border-top: 0px;
-  border-left: 0px;
-  padding: 4px 4px 4px 0px;
-  border-radius: 15px 0px;
+
 }
 
 .nav-bar > .right {
   display: inline-block;
   float:   right;
-  border: 1px solid black;
-  border-top: 0px;
-  border-right: 0px;
-  padding: 4px 0px 4px 4px;
-  border-radius: 0px 15px;
 }
 
 .nav-bar > .left  > div,
 .nav-bar > .right > div {
   display: inline-block;
   cursor: pointer;
-  border: 1px solid black;
-  border-radius: 10px;
+  border: 1px solid #52b0f7;
+  border-radius: 4px;
   padding: 0px 5px;
-  background: linear-gradient(to bottom right, #52b0f7, #2a6491);
+  background-color: #003A60;
+  color: #e0e0e0;
+  /*background: linear-gradient(to bottom right, #52b0f7, #2a6491);*/
 }
 
 
@@ -63,12 +75,14 @@ body {
 
 .nav-bar > .left  > div:hover,
 .nav-bar > .right > div:hover {
-  background: linear-gradient(to bottom right, #6dbcf8, #2f658e);
+  background-color: #1e497b;
+  /*background: linear-gradient(to bottom right, #6dbcf8, #2f658e);*/
 }
 
 .nav-bar > .left  > div:active,
 .nav-bar > .right > div:active {
-  background: linear-gradient(to bottom right, #3ca5f6, #1e537b);
+  background-color: #2a6491;
+  /*background: linear-gradient(to bottom right, #3ca5f6, #1e537b);*/
 }
 
 .icon-cell {
@@ -115,47 +129,55 @@ body {
   border: 1px solid black;
 }
 
-.center-container {
-  position: fixed;
-  width:    100%;
-  top:      15%;
+#cal {
+  position: relative;
+  width:    0;
+  height:   0;
+  top:      -27px;
+  z-index:  1;
 }
 
 /* cal = Create Account & Login */
-#cal {
+.cal {
   display: none;
+  position: absolute;
+  top: -100px;
+  right: 14px;
   width: 200px;
   height: 128px;
-  border-radius: 30px 30px 0px 0px;
+  border-radius: 0px 0px 10px 10px;
   margin: 0 auto;
   border: 1px solid black;
   background: linear-gradient(to bottom right, #6bafe3, #0b407d);
 }
 
-#cal-head {
-  border-bottom: 1px solid black;
-  cursor:        default;
-}
+.cal[type="create-account"] #create-account-extra {display: table-row;}
+.cal[type="login"]          #login-extra          {display: table-row;}
 
-#create-account-title,
-#login-title {
-  display: none;
-  width:        170px;
-  text-align:   center;
-  border-right: 2px solid black;
-}
+.cal[type="null"][status="closed"] #create-account-extra {display: none;}
+.cal[type="null"][status="closed"] #login-extra          {display: none; height: 22.67px;}
 
-#create-account-extra {display: none;}
-#login-extra          {display: none; height: 22.67px;}
-
-#cal[status="create-account"] #create-account-extra {display: table-row;}
-#cal[status="login"]          #login-extra          {display: table-row;}
-
-#cal[status="create-account"] #create-account-title {
+/*#cal[status="create-account"] #create-account-title {
   display: block;
 }
 
 #cal[status="login"] #login-title {
+  display: block;
+}*/
+
+.cal[status="closed"] {
+  display: none;
+}
+
+.cal[status="opening"] {
+  display: block;
+}
+
+.cal[status="open"] {
+  display: block;
+}
+
+.cal[status="closing"] {
   display: block;
 }
 
@@ -171,22 +193,23 @@ body {
   cursor:   pointer;
 }
 
-#cal-body td:first-child {
+.cal td:first-child {
   padding-right: 10px;
   cursor:        default;
 }
 
-#cal-body table {
+.cal table {
   border-collapse: collapse;
   margin:          0 auto;
   margin-top:      4px;
 }
 
-#cal input {
+.cal input {
   width:  100px;
 }
 
-#cal-submit {
+#login-submit,
+#create-account-submit {
   width: 100px;
   height: 20px;
   border: 1px solid black;
@@ -196,11 +219,13 @@ body {
   background: linear-gradient(to bottom right, #52b0f7, #2a6491);
 }
 
-#cal-submit:hover {
+#login-submit:hover,
+#create-account-submit:hover {
   background: linear-gradient(to bottom right, #6dbcf8, #2f658e);
 }
 
-#cal-submit:active {
+#login-submit:active,
+#create-account-submit:active {
   background: linear-gradient(to bottom right, #3ca5f6, #1e537b);
 }
 
@@ -223,9 +248,12 @@ body {
     <meta name="description"  content="This is the index">
     <meta name="author"       content="Tundra Fizz">
     <link rel="shortcut icon" href="/img/icon.jpg">
-    <link rel="stylesheet"    href="/css/theme.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <!-- <link rel="stylesheet"    href="/css/theme.css"> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
   </head>
+
+  <div id="background"></div>
 
   <body>
     <div class="nav-bar ns">
@@ -244,6 +272,48 @@ body {
           <p><%= login["username"] %> (<%= login["group_name"] %>)</p>
           <div id="nav-logout">Logout</div>
         <% } %>
+
+        <div id="cal">
+          <div id="dropdown-login" class="cal" status="closed">
+            <table>
+              <tr>
+                <td>Username</td>
+                <td><input id="login-username" type="text"></td>
+              </tr>
+              <tr>
+                <td>Password</td>
+                <td><input id="login-password" type="password"></td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <div id="login-submit">Submit</div>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <div id="dropdown-create-account" class="cal" status="closed">
+            <table>
+              <tr>
+                <td>Username</td>
+                <td><input id="create-account-username" type="text"></td>
+              </tr>
+              <tr>
+                <td>Password</td>
+                <td><input id="create-account-password" type="password"></td>
+              </tr>
+              <tr>
+                <td><abbr title="Type your password again">Confirm</abbr></td>
+                <td><input id="create-account-password-2" type="password"></td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <div id="create-account-submit">Submit</div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -332,42 +402,6 @@ body {
       <% } %>
     </div>
   </body>
-
-  <div class="center-container ns">
-    <div id="cal" active="0" status="null">
-      <div id="cal-head">
-        <table>
-          <tr>
-            <td id="create-account-title">Register</td>
-            <td id="login-title">Login</td>
-            <td id="cal-close">X</td>
-          </tr>
-        </table>
-      </div>
-      <div id="cal-body">
-        <table>
-          <tr>
-            <td>Username</td>
-            <td><input id="cal-username" type="text"></td>
-          </tr>
-          <tr>
-            <td>Password</td>
-            <td><input id="cal-password" type="password"></td>
-          </tr>
-          <tr id="create-account-extra">
-            <td><abbr title="Type your password again">Confirm</abbr></td>
-            <td><input id="cal-password-2" type="password"></td>
-          </tr>
-          <tr id="login-extra"></tr>
-          <tr>
-            <td colspan="2">
-              <div id="cal-submit">Submit</div>
-            </td>
-          </tr>
-        </table>
-      </div>
-    </div>
-  </div>
 </html>
 
 <script>
@@ -426,58 +460,60 @@ $("#delete-club").click(function(){
 });
 
 $("#nav-register").click(function(){
-  var active = $("#cal").attr("active");
-  var status = $("#cal").attr("status");
+  var statusL  = $("#dropdown-login").attr("status");
+  var statusCA = $("#dropdown-create-account").attr("status");
 
-  if(status == "null"){
-    $("#cal").attr("active", "1");
-    $("#cal").attr("status", "create-account");
-    $("#cal").fadeIn(500, function(){
-      $("#cal").attr("active", "2");
-      $("#cal").attr("status", "create-account");
+  if(statusL == "closed" && statusCA == "closed"){
+    $("#dropdown-create-account").attr("status", "opening");
+
+    $("#dropdown-create-account").animate({
+      "top": "+=129"
+    }, 350, function(){
+      $("#dropdown-create-account").attr("status", "open");
     });
   }
 
-  else if(status == "create-account" && active == "2"){
-    $("#cal").attr("active", "1");
-    $("#cal").attr("status", "create-account");
-    $("#cal").fadeOut(500, function(){
-      $("#cal").attr("active", "0");
-      $("#cal").attr("status", "null");
+  else if(statusL == "closed" && statusCA == "open"){
+    $("#dropdown-create-account").attr("status", "closing");
+
+    $("#dropdown-create-account").animate({
+      "top": "-=129"
+    }, 350, function(){
+      $("#dropdown-create-account").attr("status", "closed");
     });
   }
 
-  else if(status == "login" && active == "2"){
-    $("#cal").attr("active", "2");
-    $("#cal").attr("status", "create-account");
+  else if(statusL == "open" && statusCA == "closed"){
+    alert("Switching from Login to Register");
   }
 });
 
 $("#nav-login").click(function(){
-  var active = $("#cal").attr("active");
-  var status = $("#cal").attr("status");
+  var statusL  = $("#dropdown-login").attr("status");
+  var statusCA = $("#dropdown-create-account").attr("status");
 
-  if(status == "null"){
-    $("#cal").attr("active", "1");
-    $("#cal").attr("status", "login");
-    $("#cal").fadeIn(500, function(){
-      $("#cal").attr("active", "2");
-      $("#cal").attr("status", "login");
+  if(statusL == "closed" && statusCA == "closed"){
+    $("#dropdown-login").attr("status", "opening");
+
+    $("#dropdown-login").animate({
+      "top": "+=129"
+    }, 350, function(){
+      $("#dropdown-login").attr("status", "open");
     });
   }
 
-  else if(status == "login" && active == "2"){
-    $("#cal").attr("active", "1");
-    $("#cal").attr("status", "login");
-    $("#cal").fadeOut(500, function(){
-      $("#cal").attr("active", "0");
-      $("#cal").attr("status", "null");
+  else if(statusL == "open" && statusCA == "closed"){
+    $("#dropdown-login").attr("status", "closing");
+
+    $("#dropdown-login").animate({
+      "top": "-=129"
+    }, 350, function(){
+      $("#dropdown-login").attr("status", "closed");
     });
   }
 
-  else if(status == "create-account" && active == "2"){
-    $("#cal").attr("active", "2");
-    $("#cal").attr("status", "login");
+  else if(statusL == "closed" && statusCA == "open"){
+    alert("Switching from Register to Login");
   }
 });
 
@@ -489,11 +525,11 @@ $("#nav-logout").click(function(){
 });
 
 $("#cal-close").click(function(){
-  var active = $("#cal").attr("active");
-  if(active == "2"){
-    $("#cal").attr("active", "1");
+  var act_old_ive = $("#cal").attr("act_old_ive");
+  if(act_old_ive == "2"){
+    $("#cal").attr("act_old_ive", "1");
     $("#cal").fadeOut(500, function(){
-      $("#cal").attr("active", "0");
+      $("#cal").attr("act_old_ive", "0");
       $("#cal").attr("status", "null");
     });
   }
