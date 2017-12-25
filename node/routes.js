@@ -6,7 +6,7 @@ var jwt     = require("jsonwebtoken");
 var moment  = require("moment");
 var fs      = require("fs"); // File system library
 
-var globalApiKey = "RGAPI-212fd0c3-aedd-4cff-b978-b7a0f115d998"; // DELETE THIS LATER
+var globalApiKey = "RGAPI-02e5b9c7-9767-43c1-b16d-d419113f20f4"; // DELETE THIS LATER
 
 app.get("/", function(req, res){
   var FC = new FizzClub(req.cookies);
@@ -234,13 +234,14 @@ function MySql(){
 
 function FizzClub(cookies){
   this.cookies = cookies;
-  this.apiKey = "RGAPI-212fd0c3-aedd-4cff-b978-b7a0f115d998";
+  this.apiKey = "RGAPI-02e5b9c7-9767-43c1-b16d-d419113f20f4";
   this.cert   = fs.readFileSync("private.key");
   this.apiVersion = null;
   this.data   = {
     "clubs"     : [],
     "login"     : null,
-    "apiVersion": null
+    "apiVersion": null,
+    "background": "bg4"
   };
 }
 

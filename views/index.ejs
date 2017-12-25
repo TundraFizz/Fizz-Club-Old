@@ -2,11 +2,10 @@
 
 html {
   font-family: "Roboto", sans-serif;
+  position: relative;
 }
 
-#background {
-  filter: blur(4px);
-  background-image: url(img/bg.jpg);
+.background {
   background-position: center;
   background-size: cover;
   width: 103%;
@@ -17,8 +16,28 @@ html {
   left: -2%;
 }
 
+#bg1 {
+  filter: blur(4px);
+  background-image: url(img/1.jpg);
+}
+
+#bg2 {
+  filter: blur(4px);
+  background-image: url(img/2.jpg);
+}
+
+#bg3 {
+  background-image: url(img/3.jpg);
+}
+
+#bg4 {
+  background-image: url(img/4.jpg);
+}
+
 body {
   margin: 0;
+  /*display: flex;
+  flex-direction: column;*/
 }
 
 .ns {
@@ -32,14 +51,13 @@ body {
 }
 
 .nav-bar {
-  min-width:        500px;
-  background-color: #0f283e;
-  border:           1px solid black;
-  border-top:       0px;
-  border-left:      0px;
-  border-right:     0px;
-  padding:          4px;
-  z-index:          2;
+  position:            relative;
+  min-width:           500px;
+  background-color:    #0f283ecc;
+  border:              0px solid black;
+  border-bottom-width: 1px;
+  padding:             4px;
+  z-index:             2;
 }
 
 .nav-bar p {
@@ -93,7 +111,7 @@ body {
 }
 
 #results {
-  margin:  0 auto;
+  margin:  16px auto 24px auto;
   display: table;
 }
 
@@ -129,13 +147,13 @@ body {
   border: 1px solid black;
 }
 
-#cal {
+/*#cal {
   position: relative;
   width:    0;
   height:   0;
   top:      -27px;
   z-index:  1;
-}
+}*/
 
 /* cal = Create Account & Login */
 .cal {
@@ -205,7 +223,7 @@ body {
 }
 
 .cal input {
-  width:  100px;
+  width: 100px;
 }
 
 #login-submit,
@@ -238,6 +256,35 @@ body {
   border: 1px solid black;
 }*/
 
+#footer {
+  /*position:         relative;*/
+  background-color: #0f283ecc;
+  border:           0px solid black;
+  border-top-width: 1px;
+  /*padding:          4px;*/
+  margin-top:       6px;
+
+  position: absolute;
+  left:     0;
+  bottom:   0;
+  height:   18px;
+  width:    100%;
+}
+
+#footer > div {
+  color: #52b0f7;
+}
+
+#footer > .left {
+  display: inline-block;
+
+}
+
+#footer > .right {
+  display: inline-block;
+  float:   right;
+}
+
 </style>
 
 <!DOCTYPE html>
@@ -253,7 +300,7 @@ body {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
   </head>
 
-  <div id="background"></div>
+  <div class="background" id="<%= background %>"></div>
 
   <body>
     <div class="nav-bar ns">
@@ -265,6 +312,7 @@ body {
         <div class="filter" region="EUNE">EUNE</div>
       </div>
       <div class="right">
+          <div id="nav-change-bg">Change BG</div>
         <% if(!login){ %>
           <div id="nav-login">Login</div>
           <div id="nav-register">Register</div>
@@ -272,51 +320,52 @@ body {
           <p><%= login["username"] %> (<%= login["group_name"] %>)</p>
           <div id="nav-logout">Logout</div>
         <% } %>
-
-        <div id="cal">
-          <div id="dropdown-login" class="cal" status="closed">
-            <table>
-              <tr>
-                <td>Username</td>
-                <td><input id="login-username" type="text"></td>
-              </tr>
-              <tr>
-                <td>Password</td>
-                <td><input id="login-password" type="password"></td>
-              </tr>
-              <tr>
-                <td colspan="2">
-                  <div id="login-submit">Submit</div>
-                </td>
-              </tr>
-            </table>
-          </div>
-
-          <div id="dropdown-create-account" class="cal" status="closed">
-            <table>
-              <tr>
-                <td>Username</td>
-                <td><input id="create-account-username" type="text"></td>
-              </tr>
-              <tr>
-                <td>Password</td>
-                <td><input id="create-account-password" type="password"></td>
-              </tr>
-              <tr>
-                <td><abbr title="Type your password again">Confirm</abbr></td>
-                <td><input id="create-account-password-2" type="password"></td>
-              </tr>
-              <tr>
-                <td colspan="2">
-                  <div id="create-account-submit">Submit</div>
-                </td>
-              </tr>
-            </table>
-          </div>
-        </div>
       </div>
     </div>
 
+    <div id="cal">
+      <div id="dropdown-login" class="cal" status="closed">
+        <table>
+          <tr>
+            <td>Username</td>
+            <td><input id="login-username" type="text"></td>
+          </tr>
+          <tr>
+            <td>Password</td>
+            <td><input id="login-password" type="password"></td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <div id="login-submit">Submit</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div id="dropdown-create-account" class="cal" status="closed">
+        <table>
+          <tr>
+            <td>Username</td>
+            <td><input id="create-account-username" type="text"></td>
+          </tr>
+          <tr>
+            <td>Password</td>
+            <td><input id="create-account-password" type="password"></td>
+          </tr>
+          <tr>
+            <td><abbr title="Type your password again">Confirm</abbr></td>
+            <td><input id="create-account-password-2" type="password"></td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <div id="create-account-submit">Submit</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!--
     <table>
       <tr>
         <th>Region</th>
@@ -352,8 +401,7 @@ body {
         </td>
       </tr>
     </table>
-    <% for(var i = 0; i < 0; i++){ %>
-    <% } %>
+    -->
 
      <% if(login != null){ %>
         <table>
@@ -400,6 +448,15 @@ body {
           <% } %>
         </table>
       <% } %>
+    </div>
+
+    <div id="footer">
+      <div class="left">
+        <div>Created by <a href="https://google.com">Tundra Fizz</a></div>
+      </div>
+      <div class="right">
+        <div>Change background</div>
+      </div>
     </div>
   </body>
 </html>
@@ -484,7 +541,20 @@ $("#nav-register").click(function(){
   }
 
   else if(statusL == "open" && statusCA == "closed"){
-    alert("Switching from Login to Register");
+    $("#dropdown-login").attr("status", "closing");
+
+    $("#dropdown-login").animate({
+      "top": "-=129"
+    }, 350, function(){
+      $("#dropdown-login").attr("status", "closed");
+      $("#dropdown-create-account").attr("status", "opening");
+
+      $("#dropdown-create-account").animate({
+        "top": "+=129"
+      }, 350, function(){
+        $("#dropdown-create-account").attr("status", "open");
+      });
+    });
   }
 });
 
@@ -513,7 +583,20 @@ $("#nav-login").click(function(){
   }
 
   else if(statusL == "closed" && statusCA == "open"){
-    alert("Switching from Register to Login");
+    $("#dropdown-create-account").attr("status", "closing");
+
+    $("#dropdown-create-account").animate({
+      "top": "-=129"
+    }, 350, function(){
+      $("#dropdown-create-account").attr("status", "closed");
+      $("#dropdown-login").attr("status", "opening");
+
+      $("#dropdown-login").animate({
+        "top": "+=129"
+      }, 350, function(){
+        $("#dropdown-login").attr("status", "open");
+      });
+    });
   }
 });
 
