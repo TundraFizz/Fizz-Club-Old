@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 16, 2017 at 12:20 AM
+-- Generation Time: Dec 27, 2017 at 12:15 AM
 -- Server version: 10.1.29-MariaDB
 -- PHP Version: 7.1.12
 
@@ -35,6 +35,94 @@ CREATE TABLE `clubs` (
   `club_table` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `clubs`
+--
+
+INSERT INTO `clubs` (`id`, `region`, `tag`, `club_table`) VALUES
+(33, 'NA', 'Fizz', 'club_na_fizz'),
+(34, 'NA', 'Swag', 'club_na_swag'),
+(35, 'OCE', 'Fish', 'club_oce_fish');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `club_na_fizz`
+--
+
+CREATE TABLE `club_na_fizz` (
+  `id` int(10) NOT NULL,
+  `summoner_id` int(20) NOT NULL,
+  `summoner_name` varchar(20) NOT NULL,
+  `summoner_level` int(10) NOT NULL,
+  `summoner_icon` int(10) NOT NULL,
+  `fizz_points` int(20) NOT NULL,
+  `last_played` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `club_na_fizz`
+--
+
+INSERT INTO `club_na_fizz` (`id`, `summoner_id`, `summoner_name`, `summoner_level`, `summoner_icon`, `fizz_points`, `last_played`) VALUES
+(1, 77191987, 'GnarsBadFurDay', 39, 3147, 10900, '2017-12-11 04:22:36'),
+(2, 20782632, 'Tundra Fizz', 50, 773, 272380, '2017-12-16 08:27:56'),
+(3, 22307408, 'Sohleks', 41, 1160, 54183, '2017-11-13 01:46:07'),
+(4, 26433460, 'Abdul', 39, 3185, 25049, '2017-12-10 07:43:03');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `club_na_swag`
+--
+
+CREATE TABLE `club_na_swag` (
+  `id` int(10) NOT NULL,
+  `summoner_id` int(20) NOT NULL,
+  `summoner_name` varchar(20) NOT NULL,
+  `summoner_level` int(10) NOT NULL,
+  `summoner_icon` int(10) NOT NULL,
+  `fizz_points` int(20) NOT NULL,
+  `last_played` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `club_na_swag`
+--
+
+INSERT INTO `club_na_swag` (`id`, `summoner_id`, `summoner_name`, `summoner_level`, `summoner_icon`, `fizz_points`, `last_played`) VALUES
+(1, 66452348, 'Atlantean Fizz', 30, 773, 25716, '2016-11-27 03:33:15'),
+(2, 24386577, 'Fisherman Fizz', 53, 3099, 193080, '2017-12-17 10:23:17'),
+(3, 38034131, 'GeGe InInDerr', 42, 3232, 5170, '2017-12-19 20:30:15'),
+(4, 43875891, 'kimalsgud', 41, 3186, 784, '2017-01-27 04:33:44'),
+(5, 47821759, 'PG 0ne Magneto', 45, 3013, 38434, '2017-10-30 02:22:49'),
+(6, 63416411, 'Void Fizz', 30, 773, 7579, '2017-07-03 09:41:59'),
+(7, 35080935, 'LegacyOfDanny', 40, 3016, 635, '2017-08-21 08:27:47'),
+(8, 23628508, 'LittleBro123', 38, 3233, 16801, '2017-11-19 05:52:34');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `club_oce_fish`
+--
+
+CREATE TABLE `club_oce_fish` (
+  `id` int(10) NOT NULL,
+  `summoner_id` int(20) NOT NULL,
+  `summoner_name` varchar(20) NOT NULL,
+  `summoner_level` int(10) NOT NULL,
+  `summoner_icon` int(10) NOT NULL,
+  `fizz_points` int(20) NOT NULL,
+  `last_played` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `club_oce_fish`
+--
+
+INSERT INTO `club_oce_fish` (`id`, `summoner_id`, `summoner_name`, `summoner_level`, `summoner_icon`, `fizz_points`, `last_played`) VALUES
+(1, 315144, 'Fish', 30, 563, 7668, '2017-03-18 12:41:44');
+
 -- --------------------------------------------------------
 
 --
@@ -57,32 +145,6 @@ INSERT INTO `groups` (`id`, `group_name`, `manage_accounts`, `manage_clubs`, `cl
 (1, 'Admin', 1, 1, 1),
 (2, 'Club Leader', 0, 0, 1),
 (3, 'Club Member', 0, 0, 0);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `members`
---
-
-CREATE TABLE `members` (
-  `id` int(11) NOT NULL,
-  `summoner_id` int(20) NOT NULL,
-  `summoner_name` varchar(20) NOT NULL,
-  `summoner_region` varchar(10) NOT NULL,
-  `summoner_level` int(10) NOT NULL,
-  `summoner_icon` int(10) NOT NULL,
-  `fizz_points` int(20) NOT NULL,
-  `club_tag` varchar(10) NOT NULL,
-  `last_played` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `members`
---
-
-INSERT INTO `members` (`id`, `summoner_id`, `summoner_name`, `summoner_region`, `summoner_level`, `summoner_icon`, `fizz_points`, `club_tag`, `last_played`) VALUES
-(1, 20782632, 'Tundra Fizz', 'NA', 30, 100, 123456, 'Fizz', '2017-12-14 05:53:59'),
-(2, 76750532, 'Super Galaxy', 'NA', 12, 100, 1234, 'Fizz', '2017-12-14 06:04:08');
 
 -- --------------------------------------------------------
 
@@ -116,22 +178,35 @@ ALTER TABLE `clubs`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `club_na_fizz`
+--
+ALTER TABLE `club_na_fizz`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `club_na_swag`
+--
+ALTER TABLE `club_na_swag`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `club_oce_fish`
+--
+ALTER TABLE `club_oce_fish`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `groups`
 --
 ALTER TABLE `groups`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `members`
---
-ALTER TABLE `members`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -141,19 +216,31 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `clubs`
 --
 ALTER TABLE `clubs`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+
+--
+-- AUTO_INCREMENT for table `club_na_fizz`
+--
+ALTER TABLE `club_na_fizz`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `club_na_swag`
+--
+ALTER TABLE `club_na_swag`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `club_oce_fish`
+--
+ALTER TABLE `club_oce_fish`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `groups`
 --
 ALTER TABLE `groups`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `members`
---
-ALTER TABLE `members`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `users`

@@ -14,8 +14,8 @@ app.get("/", function(req, res){
   FC.GetApiVersion()
   .then(() => FC.CheckLogin(res))
   .then(() => FC.GetMainPage1())
-  // .then(() => res.render("index.ejs", FC.data))
-  .then(() => {console.log(FC.data);res.render("index.ejs", FC.data);})
+  .then(() => res.render("index.ejs", FC.data))
+  // .then(() => {console.log(FC.data);res.render("index.ejs", FC.data);})
   .catch((err) => console.log("ERR!", err));
 });
 
@@ -237,11 +237,25 @@ function FizzClub(cookies){
   this.apiKey = "RGAPI-02e5b9c7-9767-43c1-b16d-d419113f20f4";
   this.cert   = fs.readFileSync("private.key");
   this.apiVersion = null;
+
+  // Temp variables
+  var background = null;
+  var bgRandom   = false;
+
+  if("bg" in this.cookies){
+    background = this.cookies["bg"];
+  }else{
+    // If you don't have a bg cookie, generate a random integer
+    background = Math.floor(Math.random() * 4) + 1;
+    bgRandom = true;
+  }
+
   this.data   = {
     "clubs"     : [],
     "login"     : null,
     "apiVersion": null,
-    "background": "bg4"
+    "background": background,
+    "bgRandom"  : bgRandom
   };
 }
 
