@@ -113,34 +113,43 @@ body {
 }
 
 #results > table {
+  /* The table will start off by being invisible because it initially */
+  /* is NOT sorted. Once the document is ready, JavaScript will sort  */
+  /* the table automatically and will then set visibility to visible  */
+  visibility:      hidden;
   display:         table;
   border-collapse: collapse;
   width:           400px;
 }
 
-#results > table > tbody > tr {
+#results > table > thead > tr:nth-child(2) > th {
+  cursor: pointer;
+}
+
+#results > table tr {
   height: 1px;
 }
 
-#results > table > tbody > tr:nth-child(1) {
+#results > table tr:nth-child(1) {
   background-color: #c3f9ff;
 }
 
-#results > table > tbody > tr:nth-child(2) {
+#results > table tr:nth-child(2) {
   background-color: #52b0f7;
 }
 
-#results > table > tbody > tr:nth-child(2n+3) {
+#results > table tr:nth-child(2n+3) {
   background-color: #2a6491;
   color:            white;
 }
 
-#results > table > tbody > tr:nth-child(2n+4) {
+#results > table tr:nth-child(2n+4) {
   background-color: #1e497b;
   color:            white;
 }
 
-#results > table, table > tbody > tr > th {
+#results > table,
+table tr > th {
   border: 1px solid black;
 }
 
@@ -353,6 +362,7 @@ body {
     <!-- <link rel="stylesheet"    href="/css/theme.css"> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script src="js/tablesorter.js"></script>
     <link rel="preload" href="img/1.jpg" as="image">
     <link rel="preload" href="img/2.jpg" as="image">
     <link rel="preload" href="img/3.jpg" as="image">
@@ -486,24 +496,30 @@ body {
     <div id="results" filter="ALL">
       <% for(var i = 0; i < clubs.length; i++){var obj=clubs[i]; %>
         <table tag=<%= obj["tag"] %> region=<%= obj["region"] %>>
+          <thead>
           <tr>
-            <th colspan="5"><%= obj["tag"] %> (<%= obj["region"] %>)</th>
+            <th colspan="6"><%= obj["tag"] %> (<%= obj["region"] %>)</th>
           </tr>
           <tr>
             <th colspan="2">Name</th>
             <th>Points</th>
             <th>Level</th>
             <th>Last Played</th>
+            <th>Rank</th>
           </tr>
+        </thead>
+        <tbody>
           <% for(var j = 0; j < obj["members"].length; j++){var mem=obj["members"][j]; %>
             <tr>
-              <td class="icon-cell" style="background-image: url(http://ddragon.leagueoflegends.com/cdn/<%= apiVersion %>/img/profileicon/<%= mem['summonerIcon'] %>.png);" %></td>
+              <td class="icon-cell" style="background-image: url(https://ddragon.leagueoflegends.com/cdn/<%= apiVersion %>/img/profileicon/<%= mem['summonerIcon'] %>.png);" %></td>
               <td><%= mem["summonerName"]  %></td>
               <td><%= mem["fizzPoints"]    %></td>
               <td><%= mem["summonerLevel"] %></td>
               <td><%= mem["lastPlayed"]    %></td>
+              <td>TBD</td>
             </tr>
           <% } %>
+        </tbody>
         </table>
       <% } %>
     </div>
@@ -797,6 +813,23 @@ $(function(){
     var choice = $($("#background")[0]).attr("choice");
     $(`#change-bg-popup tr:nth-child(${choice}) > td:first-child`).css("visibility", "visible");
   }
+
+  var myTextExtraction = function(node){
+    if($(node).hasClass("icon-cell")){
+      var cell  = $("td:nth-child(2)", $(node).parent());
+      return $(cell).text();
+    }else{
+      return $(node).text();
+    }
+  }
+
+  // Tablesorter
+  $("#results > table").tablesorter({
+    "sortList":       [[2,1]],
+    "textExtraction": myTextExtraction
+  });
+  $("#results > table").css("visibility", "visible");
+  // $("#myTable").tablesorter( {sortList: [[0,0], [1,0]]} );
 });
 
 </script>
