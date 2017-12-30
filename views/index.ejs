@@ -1,835 +1,825 @@
-<style>
 
-html {
-  font-family: "Roboto", sans-serif;
-  position: relative;
-}
 
-#background {
-  background-position: center;
-  background-size: cover;
-  width: 103%;
-  height: 103%;
-  position: fixed;
-  z-index: -1;
-  top: -2%;
-  left: -2%;
-}
 
-#background[choice="1"] {
-  filter: blur(4px);
-  background-image: url(img/1.jpg);
-}
 
-#background[choice="2"] {
-  filter: blur(4px);
-  background-image: url(img/2.jpg);
-}
 
-#background[choice="3"] {
-  background-image: url(img/3.jpg);
-}
 
-#background[choice="4"] {
-  background-image: url(img/4.jpg);
-}
 
-body {
-  margin:   0;
-  /*display: flex;
-  flex-direction: column;*/
-}
 
-.ns {
-  /* No select */
-  -webkit-touch-callout: none; /* iOS Safari    */
-  -webkit-user-select:   none; /* Safari        */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                     var obj=clubs[i]; %>
+                    <option><%= obj["summoner_name"] %></option>
+                  <% for(var i = 0; i < clubs.length; i++){
+                  <% } %>
+                  <option>EUNE</option>
+                  <option>EUW</option>
+                  <option>NA</option>
+                  <option>OCE</option>
+                </select>
+                </select>
+                <select id="create-club-tag">
+                <select id="remove-from-club-text">
+                <td class="icon-cell" style="background-image: url(https://ddragon.leagueoflegends.com/cdn/<%= apiVersion %>/img/profileicon/<%= mem['summonerIcon'] %>.png);" %></td>
+                <td><%= mem["fizzPoints"]    %></td>
+                <td><%= mem["lastPlayed"]    %></td>
+                <td><%= mem["summonerLevel"] %></td>
+                <td><%= mem["summonerName"]  %></td>
+                <td>TBD</td>
+              </td>
+              </td>
+              </tr>
+              <div id="create-account-submit">Submit</div>
+              <div id="login-submit">Submit</div>
+              <td>
+              <td>
+              <td><input id="add-to-club" type="button" value="Submit"></td>
+              <td><input id="add-to-club-text" type="text"></td>
+              <td><input id="create-club" type="button" value="Submit"></td>
+              <td><input id="create-club-region" type="text"></td>
+              <td><input id="remove-from-club" type="button" value="Submit"></td>
+              <td>Add to club</td>
+              <td>Create a new club</td>
+              <td>Remove from club</td>
+              <th colspan="2">Name</th>
+              <th colspan="6"><%= obj["tag"] %> (<%= obj["region"] %>)</th>
+              <th>Last Played</th>
+              <th>Level</th>
+              <th>Points</th>
+              <th>Rank</th>
+              <tr>
+            <% for(var j = 0; j < obj["members"].length; j++){var mem=obj["members"][j]; %>
+            <% } %>
+            </td>
+            </td>
+            </tr>
+            </tr>
+            </tr>
+            </tr>
+            </tr>
+            </tr>
+            <td class="bg-option" choice="1">Light Ocean</td>
+            <td class="bg-option" choice="2">Dark Ocean</td>
+            <td class="bg-option" choice="3">Fishilhouettes</td>
+            <td class="bg-option" choice="4">Deep Trenches</td>
+            <td class="bg-option" choice="5">Random</td>
+            <td colspan="2">
+            <td colspan="2">
+            <td><abbr title="Type your password again">Confirm</abbr></td>
+            <td><input id="create-account-password" type="password"></td>
+            <td><input id="create-account-password-2" type="password"></td>
+            <td><input id="create-account-username" type="text"></td>
+            <td><input id="login-password" type="password"></td>
+            <td><input id="login-username" type="text"></td>
+            <td>Password</td>
+            <td>Password</td>
+            <td>Username</td>
+            <td>Username</td>
+            <td>🡺</td>
+            <td>🡺</td>
+            <td>🡺</td>
+            <td>🡺</td>
+            <td>🡺</td>
+            <thead>
+            <tr>
+            <tr>
+            <tr>
+            <tr>
+            <tr>
+            <tr>
+          </table>
+          </table>
+          </table>
+          </tbody>
+          </thead>
+          </tr>
+          </tr>
+          </tr>
+          </tr>
+          </tr>
+          </tr>
+          </tr>
+          </tr>
+          </tr>
+          </tr>
+          </tr>
+          </tr>
+          <div id="nav-login">Login</div>
+          <div id="nav-logout">Logout</div>
+          <div id="nav-register">Register</div>
+          <p><%= login["username"] %> (<%= login["group_name"] %>)</p>
+          <table tag=<%= obj["tag"] %> region=<%= obj["region"] %>>
+          <table>
+          <table>
+          <tbody>
+          <tr>
+          <tr>
+          <tr>
+          <tr>
+          <tr>
+          <tr>
+          <tr>
+          <tr>
+          <tr>
+          <tr>
+          <tr>
+          <tr>
+        "top": "+=159"
+        "top": "+=159"
+        $("#dropdown-create-account").attr("status", "open");
+        $("#dropdown-login").attr("status", "open");
+        $("#nav-login").trigger("click");
+        <% for(var i = 0; i < clubs.length; i++){var obj=clubs[i]; %>
+        <% if(!login){ %>
+        <% if(login != null){ %>
+        <% } %>
+        <% } %>
+        <% } %>
+        <% } else { %>
+        </table>
+        </table>
+        </table>
+        <div class="filter" region="ALL">ALL</div>
+        <div class="filter" region="EUNE">EUNE</div>
+        <div class="filter" region="EUW">EUW</div>
+        <div class="filter" region="NA">NA</div>
+        <div class="filter" region="OCE">OCE</div>
+        <div id="change-background" class="button ns">Change background</div>
+        <div>Created by <a href="https://github.com/TundraFizz/Fizz-Club" target="_blank">Tundra Fizz</a></div>
+        <table>
+        <table>
+        <table>
+      "top": "+=150"
+      "top": "+=159"
+      "top": "+=159"
+      "top": "-=150"
+      "top": "-=159"
+      "top": "-=159"
+      "top": "-=159"
+      "top": "-=159"
+      $("#change-bg-popup").attr("status", "closed");
+      $("#change-bg-popup").attr("status", "open");
+      $("#dropdown-create-account").animate({
+      $("#dropdown-create-account").attr("status", "closed");
+      $("#dropdown-create-account").attr("status", "closed");
+      $("#dropdown-create-account").attr("status", "open");
+      $("#dropdown-create-account").attr("status", "opening");
+      $("#dropdown-login").animate({
+      $("#dropdown-login").attr("status", "closed");
+      $("#dropdown-login").attr("status", "closed");
+      $("#dropdown-login").attr("status", "open");
+      $("#dropdown-login").attr("status", "opening");
+      $(this).css("display", "table");
+      // alert(data["msg"]);
+      </div>
+      </div>
+      </div>
+      </div>
+      </div>
+      </div>
+      </div>
+      </div>
+      </div>
+      <div class="left">
+      <div class="left">
+      <div class="right">
+      <div class="right">
+      <div id="change-bg-popup" class="ns" status="closed">
+      <div id="control-panel">
+      <div id="dropdown-create-account" class="cal" status="closed">
+      <div id="dropdown-login" class="cal" status="closed">
+      <div id="results" filter="ALL">
+      alert("Invalid region/tag");
+      alert("Invalid region/tag");
+      alert(data["err"]);
+      if(data["r"])
+      location.reload();
+      location.reload();
+      location.reload();
+      location.reload();
+      result = 1;
+      result++;
+      return $(cell).text();
+      return $(node).text();
+      var cell  = $("td:nth-child(2)", $(node).parent());
+      });
+      });
+      }, 350, function(){
+      }, 350, function(){
+    "choice": `club_${region}_${tag}`
+    "name" : $("#add-to-club-text").val(),
+    "name" : $("#remove-from-club-text").val(),
+    "password": $("#create-account-password").val()
+    "password": $("#login-password").val()
+    "region": $("#create-club-region").val(),
+    "sortList":       [[2,1]],
+    "tag"   : $("#create-club-tag").val()
+    "textExtraction": myTextExtraction
+    "token": ""
+    "token": ""
+    "username": $("#create-account-username").val(),
+    "username": $("#login-username").val(),
+    $("#cal-submit").trigger("click");
+    $("#change-bg-popup").animate({
+    $("#change-bg-popup").animate({
+    $("#change-bg-popup").attr("status", "closing");
+    $("#change-bg-popup").attr("status", "opening");
+    $("#dropdown-create-account").animate({
+    $("#dropdown-create-account").animate({
+    $("#dropdown-create-account").animate({
+    $("#dropdown-create-account").attr("status", "closing");
+    $("#dropdown-create-account").attr("status", "closing");
+    $("#dropdown-create-account").attr("status", "opening");
+    $("#dropdown-login").animate({
+    $("#dropdown-login").animate({
+    $("#dropdown-login").animate({
+    $("#dropdown-login").attr("status", "closing");
+    $("#dropdown-login").attr("status", "closing");
+    $("#dropdown-login").attr("status", "opening");
+    $("#results > table").css("display", "none");
+    $("#results > table").css("display", "table");
+    $($("#background")[0]).attr("choice", choice);
+    $($("#background")[0]).attr("choice", result);
+    $(`#change-bg-popup tr:nth-child(${choice}) > td:first-child`).css("visibility", "visible");
+    $(`#change-bg-popup tr:nth-child(${choice}) > td:first-child`).css("visibility", "visible");
+    $(`#results > table[region="${region}"]`).each(function(){
+    $.cookie("bg", choice);
+    $.post("create-account", obj, function(data){
+    $.removeCookie("bg");
+    // alert(data);
+    // alert(data);
+    // change it to the next one. If it goes out of bounds, set
+    // If the result is the same as the background we already have,
+    // Random background
+    // the background to the first one in the list
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    <div class="nav-bar ns">
+    <div id="background" choice="<%= background %>"></div>
+    <div id="cal">
+    <div id="change-bg-popup-container">
+    <div id="control-panel-body">
+    <div id="footer">
+    <div id="results-body">
+    alert("passwords don't match");
+    if($(node).hasClass("icon-cell")){
+    if(data["err"])
+    if(data["reload"] == "true")
+    if(data["reload"] == "true")
+    if(data["reload"] == "true")
+    if(data["reload"] == "true")
+    if(data["result"] == "failed")
+    if(data["result"] == "failed")
+    if(result == 5)
+    if(result == currentBG)
+    var choice = $($("#background")[0]).attr("choice");
+    var choice = 5;
+    var currentBG = $($("#background")[0]).attr("choice");
+    var result = Math.floor(Math.random() * 4) + 1;
+    }
+    });
+    });
+    });
+    });
+    });
+    });
+    });
+    });
+    });
+    });
+    }, 350, function(){
+    }, 350, function(){
+    }, 350, function(){
+    }, 350, function(){
+    }, 350, function(){
+    }, 350, function(){
+    }, 350, function(){
+    }, 350, function(){
+    }else{
+  $("#results > table").css("visibility", "visible");
+  $("#results > table").tablesorter({
+  $(`#change-bg-popup tr                      > td:first-child`).css("visibility", "");
+  $(`#change-bg-popup tr:nth-child(${choice}) > td:first-child`).css("visibility", "visible");
+  $.post("add-to-club", obj, function(data){
+  $.post("create-club", obj, function(data){
+  $.post("delete-club", obj, function(data){
+  $.post("login", obj, function(data){
+  $.post("logout", function(data){
+  $.post("remove-from-club", obj, function(data){
   -khtml-user-select:    none; /* Konqueror     */
   -moz-user-select:      none; /* Firefox       */
   -ms-user-select:       none; /* IE, Edge      */
-  user-select:           none; /* Chrome, Opera */
-}
-
-.nav-bar {
-  position:            relative;
-  min-width:           500px;
-  background-color:    #0f283ecc;
-  border:              0px solid black;
-  border-bottom-width: 1px;
-  padding:             4px;
-  z-index:             2;
-}
-
-.nav-bar p {
-  display: inline-block;
-  margin: 0;
-}
-
-.nav-bar > .left {
-  display: inline-block;
-
-}
-
-.nav-bar > .right {
-  display: inline-block;
-  float:   right;
-}
-
-.nav-bar > .left  > div,
-.nav-bar > .right > div {
-  display: inline-block;
-  cursor: pointer;
-  border: 1px solid #52b0f7;
-  border-radius: 4px;
-  padding: 0px 5px;
-  background-color: #003A60;
-  color: #e0e0e0;
-}
-
-
-.nav-bar > .left  > div {margin-left:  10px;}
-.nav-bar > .right > div {margin-right: 10px;}
-
-.nav-bar > .left  > div:hover,
-.nav-bar > .right > div:hover {
-  background-color: #1e497b;
-}
-
-.nav-bar > .left  > div:active,
-.nav-bar > .right > div:active {
-  background-color: #2a6491;
-}
-
-.icon-cell {
-  width:            32px;
-  height:           32px;
-  background-size:  cover;
-  padding:          0;
-}
-
-#results {
-  margin:  16px auto 24px auto;
-  display: table;
-}
-
-#results > table {
-  /* The table will start off by being invisible because it initially */
+  -webkit-touch-callout: none; /* iOS Safari    */
+  -webkit-user-select:   none; /* Safari        */
   /* is NOT sorted. Once the document is ready, JavaScript will sort  */
+  /* No select */
   /* the table automatically and will then set visibility to visible  */
-  visibility:      hidden;
-  display:         table;
-  border-collapse: collapse;
-  width:           400px;
-}
-
-#results > table > thead > tr:nth-child(2) > th {
-  cursor: pointer;
-}
-
-#results > table tr {
-  height: 1px;
-}
-
-#results > table tr:nth-child(1) {
-  background-color: #c3f9ff;
-}
-
-#results > table tr:nth-child(2) {
-  background-color: #52b0f7;
-}
-
-#results > table tr:nth-child(2n+3) {
-  background-color: #2a6491;
-  color:            white;
-}
-
-#results > table tr:nth-child(2n+4) {
+  /* The table will start off by being invisible because it initially */
+  /*display: flex;
+  /*padding:          4px;*/
+  /*position:         relative;*/
+  // $("#myTable").tablesorter( {sortList: [[0,0], [1,0]]} );
+  // Tablesorter
+  <!-- <link rel="stylesheet"    href="/css/theme.css"> -->
+  </div>
+  </div>
+  </div>
+  <div id="page-bottom">
+  <div id="page-middle">
+  <div id="page-top">
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link rel="preload" href="img/1.jpg" as="image">
+  <link rel="preload" href="img/2.jpg" as="image">
+  <link rel="preload" href="img/3.jpg" as="image">
+  <link rel="preload" href="img/4.jpg" as="image">
+  <link rel="shortcut icon" href="/img/icon.jpg">
+  <meta charset="utf-8">
+  <meta name="author"       content="Tundra Fizz">
+  <meta name="description"  content="This is the index">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+  <script src="js/tablesorter.js"></script>
+  <title>Fizz Club</title>
+  background-color:    #0f283ecc;
+  background-color: #003A60;
+  background-color: #003A60;
+  background-color: #0f283ecc;
   background-color: #1e497b;
-  color:            white;
-}
-
-#results > table,
-table tr > th {
-  border: 1px solid black;
-}
-
-/* cal = Create Account & Login */
-.cal {
-  display: none;
-  position: absolute;
-  top: -130px;
-  right: 14px;
-  width: 200px;
-  height: 128px;
-  border-radius: 0px 0px 10px 10px;
-  margin: 0 auto;
-  border: 1px solid black;
+  background-color: #1e497b;
+  background-color: #2a6491;
+  background-color: #2a6491;
+  background-color: #52b0f7;
+  background-color: #c3f9ff;
+  background-color: red;
+  background-image: url(img/1.jpg);
+  background-image: url(img/2.jpg);
+  background-image: url(img/3.jpg);
+  background-image: url(img/4.jpg);
+  background-position: center;
+  background-size:  cover;
+  background-size: cover;
+  background: linear-gradient(to bottom right, #3ca5f6, #1e537b);
+  background: linear-gradient(to bottom right, #52b0f7, #2a6491);
   background: linear-gradient(to bottom right, #6bafe3, #0b407d);
-}
-
+  background: linear-gradient(to bottom right, #6bafe3, #0b407d);
+  background: linear-gradient(to bottom right, #6dbcf8, #2f658e);
+  border-bottom-width: 1px;
+  border-collapse: collapse;
+  border-collapse: collapse;
+  border-collapse: collapse;
+  border-collapse: collapse;
+  border-radius: 0px 0px 10px 10px;
+  border-radius: 10px 10px 0px 0px;
+  border-radius: 4px;
+  border-radius: 4px;
+  border-top-width: 1px;
+  border:              0px solid black;
+  border:           0px solid black;
+  border: 1px solid #52b0f7;
+  border: 1px solid #52b0f7;
+  border: 1px solid black;
+  border: 1px solid black;
+  border: 1px solid black;
+  border: 1px solid black;
+  bottom:   0;
+  bottom: 0px
+  color:            white;
+  color:            white;
+  color:           black;
+  color: #4069ff;
+  color: #52b0f7;
+  color: #5c7fff;
+  color: #5c7fff;
+  color: #8670ff;
+  color: #e0e0e0;
+  color: #e0e0e0;
+  color: blue;
+  color: red;
+  cursor:        default;
+  cursor: pointer;
+  cursor: pointer;
+  cursor: pointer;
+  cursor: pointer;
+  cursor: pointer;
+  display:         table;
+  display:       inline-block;
+  display: block;
+  display: block;
+  display: block;
+  display: block;
+  display: block;
+  display: inline-block;
+  display: inline-block;
+  display: inline-block;
+  display: inline-block;
+  display: inline-block;
+  display: inline-block;
+  display: none;
+  display: none;
+  display: table;
+  else if(statusL == "closed" && statusCA == "open"){
+  else if(statusL == "closed" && statusCA == "open"){
+  else if(statusL == "open" && statusCA == "closed"){
+  else if(statusL == "open" && statusCA == "closed"){
+  filter: blur(4px);
+  filter: blur(4px);
+  flex-direction: column;*/
+  float:         right;
+  float:   right;
+  font-family: "Roboto", sans-serif;
+  height:           32px;
+  height:   20px;
+  height: 103%;
+  height: 122px;
+  height: 128px;
+  height: 152px;
+  height: 1px;
+  height: 200px;
+  height: 20px;
+  if($("#cal-password").val() != $("#cal-password-2").val()){
+  if(choice >= 1 && choice <= 4){
+  if(e.which == 13){
+  if(region == "ALL"){
+  if(status == "closed"){
+  if(statusL == "closed" && statusCA == "closed"){
+  if(statusL == "closed" && statusCA == "closed"){
+  if(typeof bg == "undefined"){
+  left:     0;
+  left: -2%;
+  left: 100px;
+  margin-top:       6px;
+  margin-top:      4px;
+  margin:          0 auto;
+  margin:          0;
+  margin:   0;
+  margin:  16px auto 24px auto;
+  margin: 0 auto;
+  margin: 0;
+  margin: 6px auto;
+  min-width:           500px;
+  overflow: hidden;
+  padding-left: 6px;
+  padding-right: 10px;
+  padding-right: 6px;
+  padding:             4px;
+  padding:          0;
+  padding:  4px 0px;
+  padding: 0px 5px;
+  padding: 0px 5px;
+  position:            relative;
+  position: absolute;
+  position: absolute;
+  position: absolute;
+  position: absolute;
+  position: fixed;
+  position: relative;
+  position: relative;
+  right: 14px;
+  right: 6px;
+  text-align: center;
+  top: -130px;
+  top: -2%;
+  top: 100px;
+  top: 150px;
+  user-select:           none; /* Chrome, Opera */
+  var bg = $.cookie("bg");
+  var choice = $(this).attr("choice");
+  var myTextExtraction = function(node){
+  var obj = {
+  var obj = {
+  var obj = {
+  var obj = {
+  var obj = {
+  var obj = {
+  var region = $(this).attr("region");
+  var region = temp[1];
+  var status = $("#change-bg-popup").attr("status");
+  var statusCA = $("#dropdown-create-account").attr("status");
+  var statusCA = $("#dropdown-create-account").attr("status");
+  var statusL  = $("#dropdown-login").attr("status");
+  var statusL  = $("#dropdown-login").attr("status");
+  var tag    = temp[0];
+  var temp   = $("#delete-club-choice").val().replace(/[()]/g, "").toLowerCase().split(" ");
+  visibility:      hidden;
+  visibility: hidden;
+  width:            32px;
+  width:           400px;
+  width:    100%;
+  width: 100px;
+  width: 100px;
+  width: 103%;
+  width: 200px;
+  width: 200px;
+  width: 200px;
+  width: 202px;
+  z-index:             2;
+  z-index:  2;
+  z-index: -1;
+  z-index: 1;
+  }
+  }
+  }
+  }
+  }
+  }
+  }
+  }
+  }
+  }
+  }
+  }
+  }
+  });
+  });
+  });
+  });
+  });
+  });
+  });
+  };
+  };
+  };
+  };
+  };
+  };
+  }else if(status == "open"){
+  }else{
+  }else{
+  }else{
+  }else{
+#background {
+#background[choice="1"] {
+#background[choice="2"] {
+#background[choice="3"] {
+#background[choice="4"] {
+#cal-head > table {
+#cal[status="login"] #login-title {
+#change-bg-popup .bg-option {
+#change-bg-popup .bg-option:active {
+#change-bg-popup .bg-option:hover {
+#change-bg-popup table {
+#change-bg-popup tr > td:first-child {
+#change-bg-popup {
+#change-bg-popup-container {
+#control-panel {
+#create-account-submit {
+#create-account-submit:active {
+#create-account-submit:hover {
+#footer > .left {
+#footer > .right {
+#footer > div > div.button {
+#footer > div > div.button:active {background-color: #2a6491;}
+#footer > div > div.button:hover  {background-color: #1e497b;}
+#footer > div {
+#footer a:active {
+#footer a:hover {
+#footer a:link {
+#footer a:visited {
+#footer {
+#login-submit,
+#login-submit:active,
+#login-submit:hover,
+#results > table > tbody > tr:nth-child(2n+1) {
+#results > table > tbody > tr:nth-child(2n+2) {
+#results > table > thead > tr:nth-child(1) > th {
+#results > table > thead > tr:nth-child(2) > th {
+#results > table tr {
+#results > table {
+#results > table,
+#results {
+$("#add-to-club").click(function(){
+$("#cal input").keypress(function(e){
+$("#change-background").click(function(){
+$("#create-account-submit").click(function(){
+$("#create-club").click(function(){
+$("#delete-club").click(function(){
+$("#login-submit").click(function(){
+$("#nav-login").click(function(){
+$("#nav-logout").click(function(){
+$("#nav-register").click(function(){
+$("#remove-from-club").click(function(){
+$(".bg-option").click(function(){
+$(".filter").click(function(){
+$(function(){
+.cal input {
+.cal table {
+.cal td:first-child {
+.cal {
+.cal[status="closed"] {
+.cal[status="closing"] {
+.cal[status="open"] {
+.cal[status="opening"] {
 .cal[type="create-account"] #create-account-extra {display: table-row;}
 .cal[type="login"]          #login-extra          {display: table-row;}
-
 .cal[type="null"][status="closed"] #create-account-extra {display: none;}
 .cal[type="null"][status="closed"] #login-extra          {display: none; height: 22.67px;}
-
+.icon-cell {
+.nav-bar > .left  > div {margin-left:  10px;}
+.nav-bar > .left  > div,
+.nav-bar > .left  > div:active,
+.nav-bar > .left  > div:hover,
+.nav-bar > .left {
+.nav-bar > .right > div {
+.nav-bar > .right > div {margin-right: 10px;}
+.nav-bar > .right > div:active {
+.nav-bar > .right > div:hover {
+.nav-bar > .right {
+.nav-bar p {
+.nav-bar {
+.ns {
+/* cal = Create Account & Login */
 /*#cal[status="create-account"] #create-account-title {
-  display: block;
-}
-
-#cal[status="login"] #login-title {
-  display: block;
-}*/
-
-.cal[status="closed"] {
-  display: none;
-}
-
-.cal[status="opening"] {
-  display: block;
-}
-
-.cal[status="open"] {
-  display: block;
-}
-
-.cal[status="closing"] {
-  display: block;
-}
-
-#cal-head > table {
-  margin:          0;
-  border-collapse: collapse;
-}
-
-.cal td:first-child {
-  padding-right: 10px;
-  cursor:        default;
-}
-
-.cal table {
-  border-collapse: collapse;
-  margin:          0 auto;
-  margin-top:      4px;
-}
-
-.cal input {
-  width: 100px;
-}
-
-#login-submit,
-#create-account-submit {
-  width: 100px;
-  height: 20px;
-  border: 1px solid black;
-  cursor: pointer;
-  margin: 6px auto;
-  text-align: center;
-  background: linear-gradient(to bottom right, #52b0f7, #2a6491);
-}
-
-#login-submit:hover,
-#create-account-submit:hover {
-  background: linear-gradient(to bottom right, #6dbcf8, #2f658e);
-}
-
-#login-submit:active,
-#create-account-submit:active {
-  background: linear-gradient(to bottom right, #3ca5f6, #1e537b);
-}
-
-/*#login {
-  background-color: cyan;
-  height: 300px;
-  width: 200px;
-  border-radius: 30px 30px 0px 0px;
-  margin: 0 auto;
-  border: 1px solid black;
-}*/
-
-#footer {
-  /*position:         relative;*/
-  background-color: #0f283ecc;
-  border:           0px solid black;
-  border-top-width: 1px;
-  /*padding:          4px;*/
-  margin-top:       6px;
-
-  position: absolute;
-  left:     0;
-  bottom:   0;
-  height:   20px;
-  width:    100%;
-  padding:  4px 0px;
-  z-index:  2;
-}
-
-#footer > div {
-  color: #52b0f7;
-}
-
-#footer > .left {
-  display: inline-block;
-  padding-left: 6px;
-}
-
-#footer > .right {
-  display:       inline-block;
-  float:         right;
-  padding-right: 6px;
-}
-
-#footer > div > div.button {
-  display: inline-block;
-  cursor: pointer;
-  border: 1px solid #52b0f7;
-  border-radius: 4px;
-  padding: 0px 5px;
-  background-color: #003A60;
-  color: #e0e0e0;
-}
-
-#footer > div > div.button:hover  {background-color: #1e497b;}
-#footer > div > div.button:active {background-color: #2a6491;}
-
-#footer a:link {
-  color: #4069ff;
-}
-#footer a:hover {
-  color: #5c7fff;
-}
-#footer a:active {
-  color: #5c7fff;
-}
-#footer a:visited {
-  color: #8670ff;
-}
-
-#change-bg-popup-container {
-  overflow: hidden;
-  position: absolute;
-  width: 202px;
-  height: 152px;
-  right: 6px;
-  bottom: 0px
-}
-
-#change-bg-popup {
-  position: relative;
-  width: 200px;
-  height: 122px;
-  top: 150px;
-  border-radius: 10px 10px 0px 0px;
-  border: 1px solid black;
-  background: linear-gradient(to bottom right, #6bafe3, #0b407d);
-  z-index: 1;
-}
-
 /*#change-bg-popup[status="closed"] {display: none;}*/
-
-#change-bg-popup table {
-  color:           black;
-  border-collapse: collapse;
-}
-
-#change-bg-popup tr > td:first-child {
-  visibility: hidden;
-}
-
-#change-bg-popup .bg-option {
-  cursor: pointer;
-}
-
-#change-bg-popup .bg-option:hover {
-  color: red;
-}
-
-#change-bg-popup .bg-option:active {
-  color: blue;
-}
-
-</style>
-
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Fizz Club</title>
-    <meta charset="utf-8">
-    <meta name="description"  content="This is the index">
-    <meta name="author"       content="Tundra Fizz">
-    <link rel="shortcut icon" href="/img/icon.jpg">
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <!-- <link rel="stylesheet"    href="/css/theme.css"> -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-    <script src="js/tablesorter.js"></script>
-    <link rel="preload" href="img/1.jpg" as="image">
-    <link rel="preload" href="img/2.jpg" as="image">
-    <link rel="preload" href="img/3.jpg" as="image">
-    <link rel="preload" href="img/4.jpg" as="image">
-  </head>
-
-  <div id="background" choice="<%= background %>"></div>
-
-  <body>
-    <div class="nav-bar ns">
-      <div class="left">
-        <div class="filter" region="ALL">ALL</div>
-        <div class="filter" region="NA">NA</div>
-        <div class="filter" region="OCE">OCE</div>
-        <div class="filter" region="EUW">EUW</div>
-        <div class="filter" region="EUNE">EUNE</div>
-      </div>
-      <div class="right">
-        <% if(!login){ %>
-          <div id="nav-login">Login</div>
-          <div id="nav-register">Register</div>
-        <% } else { %>
-          <p><%= login["username"] %> (<%= login["group_name"] %>)</p>
-          <div id="nav-logout">Logout</div>
-        <% } %>
-      </div>
-    </div>
-
-    <div id="cal">
-      <div id="dropdown-login" class="cal" status="closed">
-        <table>
-          <tr>
-            <td>Username</td>
-            <td><input id="login-username" type="text"></td>
-          </tr>
-          <tr>
-            <td>Password</td>
-            <td><input id="login-password" type="password"></td>
-          </tr>
-          <tr>
-            <td colspan="2">
-              <div id="login-submit">Submit</div>
-            </td>
-          </tr>
-        </table>
-      </div>
-
-      <div id="dropdown-create-account" class="cal" status="closed">
-        <table>
-          <tr>
-            <td>Username</td>
-            <td><input id="create-account-username" type="text"></td>
-          </tr>
-          <tr>
-            <td>Password</td>
-            <td><input id="create-account-password" type="password"></td>
-          </tr>
-          <tr>
-            <td><abbr title="Type your password again">Confirm</abbr></td>
-            <td><input id="create-account-password-2" type="password"></td>
-          </tr>
-          <tr>
-            <td colspan="2">
-              <div id="create-account-submit">Submit</div>
-            </td>
-          </tr>
-        </table>
-      </div>
-    </div>
-
-    <!--
-    <table>
-      <tr>
-        <th>Region</th>
-        <th>Tag</th>
-        <th></th>
-      </tr>
-      <tr>
-        <td>
-          <select id="create-club-region">
-            <option>NA</option>
-            <option>OCE</option>
-            <option>EUW</option>
-            <option>EUNE</option>
-          </select>
-        </td>
-        <td>
-          <input id="create-club-tag" type="text">
-        </td>
-        <td>
-          <input id="create-club" type="button" value="Create Club">
-        </td>
-      </tr>
-      <tr>
-        <td colspan="2">
-          <select id="delete-club-choice" style="width:100%">
-            <% for(var i = 0; i < clubs.length; i++){ var obj = clubs[i]; %>
-              <option><%= obj["tag"] %> (<%= obj["region"] %>)</option>
-            <% } %>
-          </select>
-        </td>
-        <td>
-          <input id="delete-club" type="button" value="Delete Club">
-        </td>
-      </tr>
-    </table>
-    -->
-
-     <% if(login != null){ %>
-        <table>
-          <tr>
-            <td>Add to club</td>
-            <td><input id="add-to-club-text" type="text"></td>
-            <td><input id="add-to-club" type="button" value="Submit"></td>
-          </tr>
-            <td>Remove from club</td>
-            <td>
-              <select id="remove-from-club-text">
-                <% for(var i = 0; i < clubs.length; i++){
-                   var obj=clubs[i]; %>
-                  <option><%= obj["summoner_name"] %></option>
-                <% } %>
-              </select>
-            </td>
-            <td><input id="remove-from-club" type="button" value="Submit"></td>
-          <tr>
-          </tr>
-        </table>
-    <% } %>
-
-    <div id="results" filter="ALL">
-      <% for(var i = 0; i < clubs.length; i++){var obj=clubs[i]; %>
-        <table tag=<%= obj["tag"] %> region=<%= obj["region"] %>>
-          <thead>
-          <tr>
-            <th colspan="6"><%= obj["tag"] %> (<%= obj["region"] %>)</th>
-          </tr>
-          <tr>
-            <th colspan="2">Name</th>
-            <th>Points</th>
-            <th>Level</th>
-            <th>Last Played</th>
-            <th>Rank</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% for(var j = 0; j < obj["members"].length; j++){var mem=obj["members"][j]; %>
-            <tr>
-              <td class="icon-cell" style="background-image: url(https://ddragon.leagueoflegends.com/cdn/<%= apiVersion %>/img/profileicon/<%= mem['summonerIcon'] %>.png);" %></td>
-              <td><%= mem["summonerName"]  %></td>
-              <td><%= mem["fizzPoints"]    %></td>
-              <td><%= mem["summonerLevel"] %></td>
-              <td><%= mem["lastPlayed"]    %></td>
-              <td>TBD</td>
-            </tr>
-          <% } %>
-        </tbody>
-        </table>
-      <% } %>
-    </div>
-
-    <div id="footer">
-      <div class="left">
-        <div>Created by <a href="https://github.com/TundraFizz/Fizz-Club" target="_blank">Tundra Fizz</a></div>
-      </div>
-      <div class="right">
-        <div id="change-background" class="button ns">Change background</div>
-      </div>
-    </div>
-
-    <div id="change-bg-popup-container">
-      <div id="change-bg-popup" class="ns" status="closed">
-        <table>
-          <tr>
-            <td>🡺</td>
-            <td class="bg-option" choice="1">Light Ocean</td>
-          </tr>
-          <tr>
-            <td>🡺</td>
-            <td class="bg-option" choice="2">Dark Ocean</td>
-          </tr>
-          <tr>
-            <td>🡺</td>
-            <td class="bg-option" choice="3">Option 3</td>
-          </tr>
-          <tr>
-            <td>🡺</td>
-            <td class="bg-option" choice="4">Option 4</td>
-          </tr>
-          <tr>
-            <td>🡺</td>
-            <td class="bg-option" choice="5">Random</td>
-          </tr>
-        </table>
-      </div>
-    </div>
-  </body>
+</body>
+</head>
 </html>
-
-<script>
-
-$("#add-to-club").click(function(){
-  var obj = {
-    "name"  : $("#add-to-club-text").val(),
-    "token" : ""
-  };
-
-  $.post("add-to-club", obj, function(data){
-    // alert(data);
-  });
-});
-
-$("#remove-from-club").click(function(){
-  var obj = {
-    "name"  : $("#remove-from-club-text").val(),
-    "token" : ""
-  };
-
-  $.post("remove-from-club", obj, function(data){
-    // alert(data);
-  });
-});
-
-$("#create-club").click(function(){
-  var obj = {
-    "region": $("#create-club-region").val(),
-    "tag"   : $("#create-club-tag").val()
-  };
-
-  $.post("create-club", obj, function(data){
-    if(data["reload"] == "true")
-      location.reload();
-    if(data["result"] == "failed")
-      alert("Invalid region/tag");
-  });
-});
-
-$("#delete-club").click(function(){
-  var temp   = $("#delete-club-choice").val().replace(/[()]/g, "").toLowerCase().split(" ");
-  var tag    = temp[0];
-  var region = temp[1];
-
-  var obj = {
-    "choice": `club_${region}_${tag}`
-  };
-
-  $.post("delete-club", obj, function(data){
-    if(data["reload"] == "true")
-      location.reload();
-    if(data["result"] == "failed")
-      alert("Invalid region/tag");
-  });
-});
-
-$("#nav-register").click(function(){
-  var statusL  = $("#dropdown-login").attr("status");
-  var statusCA = $("#dropdown-create-account").attr("status");
-
-  if(statusL == "closed" && statusCA == "closed"){
-    $("#dropdown-create-account").attr("status", "opening");
-
-    $("#dropdown-create-account").animate({
-      "top": "+=159"
-    }, 350, function(){
-      $("#dropdown-create-account").attr("status", "open");
-    });
-  }
-
-  else if(statusL == "closed" && statusCA == "open"){
-    $("#dropdown-create-account").attr("status", "closing");
-
-    $("#dropdown-create-account").animate({
-      "top": "-=159"
-    }, 350, function(){
-      $("#dropdown-create-account").attr("status", "closed");
-    });
-  }
-
-  else if(statusL == "open" && statusCA == "closed"){
-    $("#dropdown-login").attr("status", "closing");
-
-    $("#dropdown-login").animate({
-      "top": "-=159"
-    }, 350, function(){
-      $("#dropdown-login").attr("status", "closed");
-      $("#dropdown-create-account").attr("status", "opening");
-
-      $("#dropdown-create-account").animate({
-        "top": "+=159"
-      }, 350, function(){
-        $("#dropdown-create-account").attr("status", "open");
-      });
-    });
-  }
-});
-
-$("#nav-login").click(function(){
-  var statusL  = $("#dropdown-login").attr("status");
-  var statusCA = $("#dropdown-create-account").attr("status");
-
-  if(statusL == "closed" && statusCA == "closed"){
-    $("#dropdown-login").attr("status", "opening");
-
-    $("#dropdown-login").animate({
-      "top": "+=159"
-    }, 350, function(){
-      $("#dropdown-login").attr("status", "open");
-    });
-  }
-
-  else if(statusL == "open" && statusCA == "closed"){
-    $("#dropdown-login").attr("status", "closing");
-
-    $("#dropdown-login").animate({
-      "top": "-=159"
-    }, 350, function(){
-      $("#dropdown-login").attr("status", "closed");
-    });
-  }
-
-  else if(statusL == "closed" && statusCA == "open"){
-    $("#dropdown-create-account").attr("status", "closing");
-
-    $("#dropdown-create-account").animate({
-      "top": "-=159"
-    }, 350, function(){
-      $("#dropdown-create-account").attr("status", "closed");
-      $("#dropdown-login").attr("status", "opening");
-
-      $("#dropdown-login").animate({
-        "top": "+=159"
-      }, 350, function(){
-        $("#dropdown-login").attr("status", "open");
-      });
-    });
-  }
-});
-
-$("#nav-logout").click(function(){
-  $.post("logout", function(data){
-    if(data["reload"] == "true")
-      location.reload();
-  });
-});
-
-$("#cal-submit").click(function(){
-  var status = $("#cal").attr("status");
-  var obj = {
-    "username": $("#cal-username").val(),
-    "password": $("#cal-password").val()
-  };
-
-  if(status == "create-account"){
-    if($("#cal-password").val() != $("#cal-password-2").val()){
-      alert("passwords don't match");
-      return;
-    }else{
-      $.post("create-account", obj, function(data){
-        alert(data["msg"]);
-        if(data["r"])
-          $("#nav-login").trigger("click");
-      });
-    }
-  }else if(status == "login"){
-    $.post("login", obj, function(data){
-      if(data["reload"] == "true")
-        location.reload();
-      if(data["err"])
-        alert(data["err"]);
-    });
-  }
-});
-
-$("#cal input").keypress(function(e){
-  if(e.which == 13){
-    $("#cal-submit").trigger("click");
-  }
-});
-
-$("#change-background").click(function(){
-  var status = $("#change-bg-popup").attr("status");
-
-  if(status == "closed"){
-    $("#change-bg-popup").attr("status", "opening");
-
-    $("#change-bg-popup").animate({
-      "top": "-=150"
-    }, 350, function(){
-      $("#change-bg-popup").attr("status", "open");
-    });
-  }else if(status == "open"){
-    $("#change-bg-popup").attr("status", "closing");
-
-    $("#change-bg-popup").animate({
-      "top": "+=150"
-    }, 350, function(){
-      $("#change-bg-popup").attr("status", "closed");
-    });
-  }
-});
-
-$(".bg-option").click(function(){
-  var choice = $(this).attr("choice");
-  $(`#change-bg-popup tr                      > td:first-child`).css("visibility", "");
-  $(`#change-bg-popup tr:nth-child(${choice}) > td:first-child`).css("visibility", "visible");
-
-  if(choice >= 1 && choice <= 4){
-    $.cookie("bg", choice);
-    $($("#background")[0]).attr("choice", choice);
-  }else{
-    $.removeCookie("bg");
-    // Random background
-    var result = Math.floor(Math.random() * 4) + 1;
-    var currentBG = $($("#background")[0]).attr("choice");
-
-    // If the result is the same as the background we already have,
-    // change it to the next one. If it goes out of bounds, set
-    // the background to the first one in the list
-    if(result == currentBG)
-      result++;
-    if(result == 5)
-      result = 1;
-
-    $($("#background")[0]).attr("choice", result);
-  }
-});
-
-$(".filter").click(function(){
-  var region = $(this).attr("region");
-
-  if(region == "ALL"){
-    $("#results > table").css("display", "table");
-  }else{
-    $("#results > table").css("display", "none");
-    $(`#results > table[region="${region}"]`).each(function(){
-      $(this).css("display", "table");
-    });
-  }
-});
-
-$(function(){
-  var bg = $.cookie("bg");
-
-  if(typeof bg == "undefined"){
-    var choice = 5;
-    $(`#change-bg-popup tr:nth-child(${choice}) > td:first-child`).css("visibility", "visible");
-  }else{
-    var choice = $($("#background")[0]).attr("choice");
-    $(`#change-bg-popup tr:nth-child(${choice}) > td:first-child`).css("visibility", "visible");
-  }
-
-  var myTextExtraction = function(node){
-    if($(node).hasClass("icon-cell")){
-      var cell  = $("td:nth-child(2)", $(node).parent());
-      return $(cell).text();
-    }else{
-      return $(node).text();
-    }
-  }
-
-  // Tablesorter
-  $("#results > table").tablesorter({
-    "sortList":       [[2,1]],
-    "textExtraction": myTextExtraction
-  });
-  $("#results > table").css("visibility", "visible");
-  // $("#myTable").tablesorter( {sortList: [[0,0], [1,0]]} );
-});
-
 </script>
+</style>
+<body>
+<head>
+<html lang="en">
+<script>
+<style>
+body {
+html {
+table tr > th {
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+});
+});
+});
+});
+});
+});
+});
+});
+});
+});
+});
+});
+});
+});
+}*/

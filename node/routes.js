@@ -6,7 +6,7 @@ var jwt     = require("jsonwebtoken");
 var moment  = require("moment");
 var fs      = require("fs"); // File system library
 
-var globalApiKey = "RGAPI-0dc01071-a755-40f1-b628-c52ca93a18b3"; // DELETE THIS LATER
+var globalApiKey = "RGAPI-4f0d6ac2-27e6-4cad-80b2-581a3e64438d"; // DELETE THIS LATER
 
 app.get("/", function(req, res){
   var FC = new FizzClub(req.cookies);
@@ -50,8 +50,14 @@ app.post("/testing", function(req, res){
   // FC.GetDataFromSummonerName("Lord Dusteon").then((data) => console.log(data, "Atlantean Fizz"));
 });
 
+app.post("/create-club", function(req, res){
+});
+
+app.post("/delete-club", function(req, res){
+});
+
 app.post("/add-to-club", function(req, res){
-  console.log(req["body"]);
+  // console.log(req["body"]);
   // res.json({});
   var sql  = "INSERT INTO members (summoner_name, summoner_region) VALUES (?,?)";
 
@@ -66,7 +72,7 @@ app.post("/add-to-club", function(req, res){
 
     var sql  = "SELECT COUNT(*) as count FROM members WHERE summoner_id=? AND summoner_region=?";
     var args = [id, region];
-    console.log(args);
+    // console.log(args);
     mySql.con.query(sql, args, function(err, result){
       var count = result[0]["count"];
       if(count == 0){
@@ -94,7 +100,7 @@ app.post("/add-to-club", function(req, res){
 });
 
 app.post("/remove-from-club", function(req, res){
-  console.log(req["body"]);
+  // console.log(req["body"]);
   res.json({});
 });
 
@@ -178,7 +184,9 @@ app.post("/create-club", function(req, res){
       summoner_level INT(10)     NOT NULL,
       summoner_icon  INT(10)     NOT NULL,
       fizz_points    INT(20)     NOT NULL,
-      last_played    TIMESTAMP       NULL DEFAULT NULL,
+      last_played    TIMESTAMP   NULL DEFAULT NULL,
+      current_rank   VARCHAR(20) NULL DEFAULT NULL,
+      prev_ranks     TEXT        NULL DEFAULT NULL,
       PRIMARY KEY (id)
       )`;
       var sql = `CREATE TABLE ${tableName} ${vars} ENGINE = InnoDB`;
@@ -234,7 +242,7 @@ function MySql(){
 
 function FizzClub(cookies){
   this.cookies = cookies;
-  this.apiKey = "RGAPI-0dc01071-a755-40f1-b628-c52ca93a18b3";
+  this.apiKey = "RGAPI-4f0d6ac2-27e6-4cad-80b2-581a3e64438d";
   this.cert   = fs.readFileSync("private.key");
   this.apiVersion = null;
 
@@ -268,36 +276,7 @@ FizzClub.prototype.GetApiVersion = function(){return new Promise((resolve) => {
   });
 })}
 
-FizzClub.prototype.AddMember = function(data){return new Promise((resolve) => {
-  var self = this;
-  console.log(data);
-
-  //
-
-  GetDataFromSummonerName
-
-  resolve();
-})}
-
-FizzClub.prototype.RemoveMember = function(){return new Promise((resolve) => {
-})}
-
 FizzClub.prototype.UpdateMembers = function(){return new Promise((resolve) => {
-})}
-
-FizzClub.prototype.GetFizzData = function(id, region){return new Promise((resolve) => {
-  var self = this;
-  var map = {
-    "NA"  : "na1",
-    "OCE" : "oc1",
-    "EUW" : "euw1",
-    "EUNE": "eun1"
-  };
-  region  = map[region];
-  var url = `https://${region}.api.riotgames.com/lol/champion-mastery/v3/champion-masteries/by-summoner/${id}/by-champion/105?api_key=${self.apiKey}`;
-  request(url, {json:true}, (err, res, body) => {
-    resolve(body);
-  });
 })}
 
 FizzClub.prototype.UpdateEverybody = function(){return new Promise((resolve) => {
@@ -468,14 +447,18 @@ FizzClub.prototype.CheckLogin = function(res){return new Promise((resolve) => {
   }
 })}
 
-function YoloSwag(summonerName, region, club){
-  this.summonerName = summonerName;
-  this.region       = region;
-  this.club         = club;
-  this.error        = false;
+function MemberManager(summonerName, region, club){
+  this["summonerName"]  = summonerName;
+  this["region"]        = region;
+  this["club"]          = club;
+  this["id"]            = null;
+  this["profileIconId"] = null;
+  this["summonerLevel"] = null;
+  this["error"]         = false;
+  this["apiKey"]        = "RGAPI-4f0d6ac2-27e6-4cad-80b2-581a3e64438d";
 }
 
-YoloSwag.prototype.CheckIfSummonerIsInClub = function(){return new Promise((resolve, reject) => {
+MemberManager.prototype.CheckIfSummonerIsInClub = function(){return new Promise((resolve, reject) => {
   var self = this;
 
   var sql  = `SELECT COUNT(*) as count FROM ${self.club} WHERE summoner_name=?;`;
@@ -494,7 +477,7 @@ YoloSwag.prototype.CheckIfSummonerIsInClub = function(){return new Promise((reso
   });
 })}
 
-YoloSwag.prototype.GetDataFromSummonerName = function(){return new Promise((resolve, reject) => {
+MemberManager.prototype.GetDataFromSummonerName = function(){return new Promise((resolve, reject) => {
   var self   = this;
   var name   = self["summonerName"];
   var region = self["region"];
@@ -527,7 +510,7 @@ YoloSwag.prototype.GetDataFromSummonerName = function(){return new Promise((reso
   });
 })}
 
-YoloSwag.prototype.GetFizzData = function(){return new Promise((resolve, reject) => {
+MemberManager.prototype.GetFizzData = function(){return new Promise((resolve, reject) => {
   var self   = this;
   var id     = self["id"];
   var region = self["region"];
@@ -558,7 +541,51 @@ YoloSwag.prototype.GetFizzData = function(){return new Promise((resolve, reject)
   });
 })}
 
-YoloSwag.prototype.AddSummonerToClub = function(){return new Promise((resolve, reject) => {
+MemberManager.prototype.GetCurrentRank = function(){return new Promise((resolve) => {
+  var self = this;
+
+  var regionMap = {
+    "NA"  : "na1",
+    "OCE" : "oc1",
+    "EUW" : "euw1",
+    "EUNE": "eun1"
+  };
+
+  var rankMap = {
+    "UNRANKED"  : 0,
+    "BRONZE"    : 1,
+    "SILVER"    : 2,
+    "GOLD"      : 3,
+    "PLATINUM"  : 4,
+    "DIAMOND"   : 5,
+    "MASTER"    : 6,
+    "CHALLENGER": 7,
+  };
+
+  var region = regionMap[self.region];
+  var url    = `https://${region}.api.riotgames.com/lol/league/v3/leagues/by-summoner/${self.id}?api_key=${self.apiKey}`;
+
+  request(url, {json:true}, (err, res, body) => {
+    console.log(`========== ${self.summonerName} ==========`);
+    var rank = 0;
+
+    for(var i = 0; i < body.length; i++){
+      var temp = rankMap[body[i]["tier"]];
+      if(rank < temp)
+        rank = temp;
+    }
+
+    for(key in rankMap){
+      if(rank == rankMap[key])
+        rank = key.toLowerCase();
+    }
+
+    console.log(rank);
+    resolve(body);
+  });
+})}
+
+MemberManager.prototype.AddSummonerToClub = function(){return new Promise((resolve, reject) => {
   var self = this;
   var club = self["club"];
 
@@ -568,9 +595,11 @@ YoloSwag.prototype.AddSummonerToClub = function(){return new Promise((resolve, r
   var summonerLevel = self["summonerLevel"];
   var fizzPoints    = self["championPoints"];
   var lastPlayed    = self["lastPlayTime"].toString().slice(0, -3);
+  var currentRank   = self["currentRank"];
+  var prevRanks     = "";
 
-  var  sql = `INSERT INTO ${club} (summoner_id, summoner_icon, summoner_name, summoner_level, fizz_points, last_played) VALUES (?,?,?,?,?,FROM_UNIXTIME(?))`;
-  var args = [summonerId, summonerIcon, summonerName, summonerLevel, fizzPoints, lastPlayed];
+  var  sql = `INSERT INTO ${club} (summoner_id, summoner_icon, summoner_name, summoner_level, fizz_points, last_played, current_rank, prev_ranks) VALUES (?,?,?,?,?,FROM_UNIXTIME(?),?,?)`;
+  var args = [summonerId, summonerIcon, summonerName, summonerLevel, fizzPoints, lastPlayed, currentRank, prevRanks];
   mySql.con.query(sql, args, function(err, result){
     if(err)
       reject(err);
@@ -581,37 +610,39 @@ YoloSwag.prototype.AddSummonerToClub = function(){return new Promise((resolve, r
 
 var mySql = new MySql();
 
-// Test();
+Test();
 
 function Test(){
-  AddToClub("Tundra Fizz", "NA", "club_na_fizz");
-  AddToClub("Sohleks", "NA", "club_na_fizz");
-  AddToClub("Abdul", "NA", "club_na_fizz");
-  AddToClub("GnarsBadFurDay", "NA", "club_na_fizz");
-  AddToClub("Zakkery", "NA", "club_na_fizz");
+  // AddToClub("Tundra Fizz", "NA", "club_na_fizz");
+  AddToClub("Arbucks", "NA", "club_na_fizz");
+  // AddToClub("Sohleks", "NA", "club_na_fizz");
+  // AddToClub("Abdul", "NA", "club_na_fizz");
+  // AddToClub("GnarsBadFurDay", "NA", "club_na_fizz");
+  // AddToClub("Zakkery", "NA", "club_na_fizz");
 
-  AddToClub("Fisherman Fizz", "NA", "club_na_swag");
-  AddToClub("Atlantean Fizz", "NA", "club_na_swag");
-  AddToClub("Void Fizz", "NA", "club_na_swag");
-  AddToClub("PG 0ne Magneto", "NA", "club_na_swag");
-  AddToClub("kimalsgud", "NA", "club_na_swag");
-  AddToClub("GeGe InInDerr", "NA", "club_na_swag");
-  AddToClub("LegacyOfDanny", "NA", "club_na_swag");
-  AddToClub("LittleBro123", "NA", "club_na_swag");
+  // AddToClub("Fisherman Fizz", "NA", "club_na_swag");
+  // AddToClub("Atlantean Fizz", "NA", "club_na_swag");
+  // AddToClub("Void Fizz", "NA", "club_na_swag");
+  // AddToClub("PG 0ne Magneto", "NA", "club_na_swag");
+  // AddToClub("kimalsgud", "NA", "club_na_swag");
+  // AddToClub("GeGe InInDerr", "NA", "club_na_swag");
+  // AddToClub("LegacyOfDanny", "NA", "club_na_swag");
+  // AddToClub("LittleBro123", "NA", "club_na_swag");
 
-  AddToClub("Super Galaxy", "OCE", "club_oce_fish");
-  AddToClub("Tsdlk sdfjfk", "OCE", "club_oce_fish");
-  AddToClub("Fish", "OCE", "club_oce_fish");
+  // AddToClub("Super Galaxy", "OCE", "club_oce_fish");
+  // AddToClub("Tsdlk sdfjfk", "OCE", "club_oce_fish");
+  // AddToClub("Fish", "OCE", "club_oce_fish");
 }
 
 function AddToClub(summonerName, region, club){
 
-  var yoloSwag = new YoloSwag(summonerName, region, club);
+  var memberManager = new MemberManager(summonerName, region, club);
 
-  yoloSwag.CheckIfSummonerIsInClub()
-  .then(() => yoloSwag.GetDataFromSummonerName())
-  .then(() => yoloSwag.GetFizzData())
-  .then(() => yoloSwag.AddSummonerToClub())
+  memberManager.CheckIfSummonerIsInClub()
+  .then(() => memberManager.GetDataFromSummonerName())
+  .then(() => memberManager.GetFizzData())
+  .then(() => memberManager.GetCurrentRank())
+  // .then(() => memberManager.AddSummonerToClub())
   .then(() => console.log("GOOD!"))
   // .catch((err) => console.log("ERR!"));
   .catch((err) => console.log("ERR!", err));
